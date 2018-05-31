@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.report.mapper.DeliveryMapper">
+    <resultMap id="BaseMap" type="com.weyao.srv.report.entity.delivery.OrderDelivery">
+		<result column="record_date" property="recordDate" jdbcType="DATE" />
+		<result column="city_name" property="cityName" jdbcType="VARCHAR" />
+		<result column="order_id" property="orderId" jdbcType="INTEGER" />
+		<result column="delivery_way" property="deliveryWay" jdbcType="VARCHAR" />
+	</resultMap>
+	
+    <select id="listReports" resultType="com.weyao.srv.report.entity.delivery.OrderDelivery" resultMap="BaseMap">
+		SELECT
+			DATE(t.first_delivery_time) AS record_date,
+			tc.`name` AS city_name,
+			t.order_id,
+			toei.express_name AS delivery_way
+		FROM(
+			SELECT DISTINCT 
+				t.order_id,
+				t.insurance_city_id,
+				t.first_delivery_time
+			FROM
+				t_st_insurance_based t
+			WHERE
+				(DATE(t.now_delivery_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND HOUR(t.first_delivery_time)&gt;7)
+			OR
+				(DATE(t.now_delivery_time)=CURDATE() AND HOUR(t.first_delivery_time)&lt;7) ) t
+		LEFT JOIN(
+			SELECT 
+				t.order_id, td.`name` AS express_name
+			FROM 
+				t_order_express_info t
+			LEFT JOIN
+				t_dictionary td
+			ON
+				td.`code`=t.express_company_id
+			WHERE
+				td.type=10028
+			AND
+				t.express_name IS NOT NULL AND LENGTH(TRIM(t.express_name)) &gt; 0
+			GROUP BY
+				t.order_id, t.express_name) toei
+		ON
+			toei.order_id=t.order_id
+		LEFT JOIN
+			t_city tc
+		ON
+			t.insurance_city_id=tc.city_id
+	</select>
+</mapper>

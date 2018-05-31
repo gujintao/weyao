@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.report.mapper.DataRegionalActiveAddPersistMapper">
+	<insert id="saveOrUpdate" >
+	  <selectKey keyProperty="_count" resultType="int" order="BEFORE">
+	    SELECT count(*) as count from data_regional_active_add 
+	    where statis_date= #{statisDate} and city_id = #{cityId}
+	    and statis_date_week = #{statisDateWeek} and statis_date_month = #{statisDateMonth}
+	  </selectKey>
+	  <if test="_count > 0">
+	    update data_regional_active_add 
+	    set jg_calc_active = #{jgCalcActive}, yyd_calc_active = #{yydCalcActive},
+	    overall_calc_active = #{overallCalcActive}, jg_order_active = #{jgOrderActive},
+	    yyd_order_active = #{yydOrderActive}, overall_order_active = #{overallOrderActive},
+	    yyd_first_login_bee = #{yydFirstLoginBee}, yyd_register_bee = #{yydRegisterBee},
+	    jg_register_bee = #{jgRegisterBee}, h5_register_bee = #{h5RegisterBee},
+	    batch_import_bee = #{batchImportBee}, overall_register_bee = #{overallRegisterBee}
+	    where statis_date= #{statisDate} and city_id = #{cityId}
+	    and statis_date_week = #{statisDateWeek} and statis_date_month = #{statisDateMonth}
+	  </if>
+	  <if test="_count == 0">
+	    insert into data_regional_active_add (statis_date,statis_date_week,statis_date_month,city_id, 
+	    jg_calc_active, yyd_calc_active, overall_calc_active, jg_order_active,
+	    yyd_order_active, overall_order_active, yyd_first_login_bee, yyd_register_bee,
+	    jg_register_bee, h5_register_bee, batch_import_bee, overall_register_bee)
+	    values(
+	    #{statisDate}, #{statisDateWeek}, #{statisDateMonth}, #{cityId},
+	    #{jgCalcActive}, #{yydCalcActive},
+	    #{overallCalcActive}, #{jgOrderActive},
+	    #{yydOrderActive}, #{overallOrderActive},
+	    #{yydFirstLoginBee}, #{yydRegisterBee},
+	    #{jgRegisterBee}, #{h5RegisterBee},
+	    #{batchImportBee}, #{overallRegisterBee}
+	    )
+	  </if>
+	</insert>
+</mapper>

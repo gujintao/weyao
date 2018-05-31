@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.report.mapper.DataSaleInsuranceMapper">
+  <resultMap id="BaseResultMap" type="com.weyao.info.indicator.bo.IndicatorRecord">
+    <id column="code" property="code" jdbcType="BIGINT"/>
+    <id column="angleType" property="angleType" jdbcType="VARCHAR"/>
+    <id column="angle" property="angle" jdbcType="VARCHAR"/>
+    <id column="acturalTime" property="acturalTime" jdbcType="TIMESTAMP"/>
+    <result column="indicatorValueSum" property="indicatorValueSum" jdbcType="DOUBLE"/>
+    <result column="indicatorValueCount" property="indicatorValueCount" jdbcType="BIGINT"/>
+  </resultMap>
+
+  <resultMap id="SaleResultMap" type="com.weyao.srv.report.entity.DaySaleReport">
+    <result column="angleFirst" property="angleFirst" jdbcType="VARCHAR"/>
+    <result column="angleSecond" property="angleSecond" jdbcType="VARCHAR"/>
+    <result column="busiCount" property="busiCount" jdbcType="BIGINT"/>
+    <result column="busiSum" property="busiSum" jdbcType="DOUBLE"/>
+    <result column="orderCount" property="orderCount" jdbcType="BIGINT"/>
+    <result column="orderSum" property="orderSum" jdbcType="DOUBLE"/>
+    <result column="lastMonBusinessCount" property="lastMonBusinessCount" jdbcType="BIGINT"/>
+    <result column="busiTbRate" property="busiTbRate" jdbcType="VARCHAR"/>
+    <result column="busiCountHbRate" property="busiCountHbRate" jdbcType="VARCHAR"/>
+    <result column="busiSumHbRate" property="busiSumHbRate" jdbcType="VARCHAR"/>
+    <result column="orderCountHbRate" property="orderCountHbRate" jdbcType="VARCHAR"/>
+    <result column="orderSumHbRate" property="orderSumHbRate" jdbcType="VARCHAR"/>
+    <result column="cancleCount" property="cancleCount" jdbcType="BIGINT"/>
+    <result column="cancleSum" property="cancleSum" jdbcType="DOUBLE"/>
+  </resultMap>
+
+	<select id="queryMonthSaleReportST" resultMap="SaleResultMap">
+    select 
+    a.angle as angleSecond, IFNULL(a.busiCount,0) as busiCount, IFNULL(a.busiSum,0) as busiSum
+    ,IFNULL(a.orderCount,0) as orderCount, IFNULL(a.orderSum,0) as orderSum
+    ,IFNULL(CONCAT( FORMAT(100*(IFNULL(a.busiCount,0)-#{rate}*IFNULL(f.busiCount,0))/(#{rate}*IFNULL(f.busiCount,0)),2),'%'),'-') as busiTbRate
+    ,IFNULL(CONCAT( FORMAT(100*(IFNULL(a.busiCount,0)-#{rate}*IFNULL(c.busiCount,0))/(#{rate}*IFNULL(c.busiCount,0)),2),'%'),'-') as busiCountHbRate
+    ,IFNULL(CONCAT( FORMAT(100*(IFNULL(a.busiSum,0)-#{rate}*IFNULL(c.busiSum,0))/(#{rate}*IFNULL(c.busiSum,0)),2),'%'),'-') as busiSumHbRate
+    ,IFNULL(CONCAT( FORMAT(100*(IFNULL(a.orderCount,0)-#{rate}*IFNULL(c.orderCount,0))/(#{rate}*IFNULL(c.orderCount,0)),2),'%'),'-') as orderCountHbRate
+    ,IFNULL(CONCAT( FORMAT(100*(IFNULL(a.orderSum,0)-#{rate}*IFNULL(c.orderSum,0))/(#{rate}*IFNULL(c.orderSum,0)),2),'%'),'-') as orderSumHbRate
+    ,IFNULL(a.cancleCount,0) as cancleCount,IFNULL(a.cancleSum,0) as cancleSum
+	from
+	(
+		select angle,sum(business_count) as busiCount,sum(business_sum) as busiSum,
+		sum(order_count) as orderCount,sum(order_sum) as orderSum,
+		sum(cancle_count) as cancleCount,sum(cancle_sum) as cancleSum
+		from data_sale_insurance where 1=1
+		<if test="angleType != null and angleType != ''">
+	      AND angle_type = #{angleType}
+	    </if>
+		<if test="angle != null and angle != ''">
+	      AND angle = #{angle}
+	    </if>
+		<if test="from != null and from != ''">
+	      AND statis_date &gt;= #{from}
+	    </if>
+	    <if test="to != null and to != ''">
+	      AND statis_date &lt;= #{to}
+	    </if>
+	    group by angle,angle_type
+	) a 
+	left join
+	(
+		select angle,sum(business_count) as busiCount,sum(business_sum) as busiSum,
+		sum(order_count) as orderCount,sum(order_sum) as orderSum,
+		sum(cancle_count) as cancleCount,sum(cancle_sum) as cancleSum
+		from data_sale_insurance where 1=1
+		<if test="angleType != null and angleType != ''">
+	      AND angle_type = #{angleType}
+	    </if>
+		<if test="angle != null and angle != ''">
+	      AND angle = #{angle}
+	    </if>
+		<if test="lastMonthFrom != null and lastMonthFrom != ''">
+		  AND statis_date &gt;= #{lastMonthFrom}
+		</if>
+		<if test="lastMonthTo != null and lastMonthTo != ''">
+		  AND statis_date &lt;= #{lastMonthTo}
+		</if>
+	    group by angle,angle_type
+	) c on a.angle = c.angle 
+	left join
+	(
+	  	select angle,sum(business_count) as busiCount,sum(business_sum) as busiSum,
+		sum(order_count) as orderCount,sum(order_sum) as orderSum,
+		sum(cancle_count) as cancleCount,sum(cancle_sum) as cancleSum
+		from data_sale_insurance where 1=1
+		<if test="angleType != null and angleType != ''">
+	      AND angle_type = #{angleType}
+	    </if>
+		<if test="angle != null and angle != ''">
+	      AND angle = #{angle}
+	    </if>
+		<if test="lastYthisMFrom != null and lastYthisMFrom != ''">
+		  AND statis_date &gt;= #{lastYthisMFrom}
+		</if>
+		<if test="lastYthisMTo != null and lastYthisMTo != ''">
+		  AND statis_date &lt;= #{lastYthisMTo}
+		</if>
+	    group by angle,angle_type
+	) f on a.angle = f.angle 
+	order by angleSecond
+  </select>
+   
+   <select id="queryCityAndSupplierReportST" resultMap="SaleResultMap">
+    select 
+    substring_index(a.angle, '-', 1) as angleFirst,substring_index(a.angle, '-', -1) as angleSecond
+    ,IFNULL(a.busiCount,0) as busiCount, IFNULL(a.busiSum,0) as busiSum
+    ,IFNULL(a.orderCount,0) as orderCount, IFNULL(a.orderSum,0) as orderSum
+    ,IFNULL(CONCAT( FORMAT(100*(IFNULL(a.busiCount,0)-#{rate}*IFNULL(f.busiCount,0))/(#{rate}*IFNULL(f.busiCount,0)),2),'%'),'-') as busiTbRate
+    ,IFNULL(CONCAT( FORMAT(100*(IFNULL(a.busiCount,0)-#{rate}*IFNULL(c.busiCount,0))/(#{rate}*IFNULL(c.busiCount,0)),2),'%'),'-') as busiCountHbRate
+    ,IFNULL(CONCAT( FORMAT(100*(IFNULL(a.busiSum,0)-#{rate}*IFNULL(c.busiSum,0))/(#{rate}*IFNULL(c.busiSum,0)),2),'%'),'-') as busiSumHbRate
+    ,IFNULL(CONCAT( FORMAT(100*(IFNULL(a.orderCount,0)-#{rate}*IFNULL(c.orderCount,0))/(#{rate}*IFNULL(c.orderCount,0)),2),'%'),'-') as orderCountHbRate
+    ,IFNULL(CONCAT( FORMAT(100*(IFNULL(a.orderSum,0)-#{rate}*IFNULL(c.orderSum,0))/(#{rate}*IFNULL(c.orderSum,0)),2),'%'),'-') as orderSumHbRate
+    ,IFNULL(a.cancleCount,0) as cancleCount,IFNULL(a.cancleSum,0) as cancleSum
+	from
+	(
+		select angle,sum(business_count) as busiCount,sum(business_sum) as busiSum,
+		sum(order_count) as orderCount,sum(order_sum) as orderSum,
+		sum(cancle_count) as cancleCount,sum(cancle_sum) as cancleSum
+		from data_sale_insurance where 1=1
+		<if test="angleType != null and angleType != ''">
+	      AND angle_type = #{angleType}
+	    </if>
+		<if test="angle != null and angle != ''">
+	      AND angle = #{angle}
+	    </if>
+		<if test="from != null and from != ''">
+	      AND statis_date &gt;= #{from}
+	    </if>
+	    <if test="to != null and to != ''">
+	      AND statis_date &lt;= #{to}
+	    </if>
+	    group by angle,angle_type
+	) a 
+	left join
+	(
+		select angle,sum(business_count) as busiCount,sum(business_sum) as busiSum,
+		sum(order_count) as orderCount,sum(order_sum) as orderSum,
+		sum(cancle_count) as cancleCount,sum(cancle_sum) as cancleSum
+		from data_sale_insurance where 1=1
+		<if test="angleType != null and angleType != ''">
+	      AND angle_type = #{angleType}
+	    </if>
+		<if test="angle != null and angle != ''">
+	      AND angle = #{angle}
+	    </if>
+		<if test="lastMonthFrom != null and lastMonthFrom != ''">
+		  AND statis_date &gt;= #{lastMonthFrom}
+		</if>
+		<if test="lastMonthTo != null and lastMonthTo != ''">
+		  AND statis_date &lt;= #{lastMonthTo}
+		</if>
+	    group by angle,angle_type
+	) c on a.angle = c.angle 
+	left join
+	(
+	  	select angle,sum(business_count) as busiCount,sum(business_sum) as busiSum,
+		sum(order_count) as orderCount,sum(order_sum) as orderSum,
+		sum(cancle_count) as cancleCount,sum(cancle_sum) as cancleSum
+		from data_sale_insurance where 1=1
+		<if test="angleType != null and angleType != ''">
+	      AND angle_type = #{angleType}
+	    </if>
+		<if test="angle != null and angle != ''">
+	      AND angle = #{angle}
+	    </if>
+		<if test="lastYthisMFrom != null and lastYthisMFrom != ''">
+		  AND statis_date &gt;= #{lastYthisMFrom}
+		</if>
+		<if test="lastYthisMTo != null and lastYthisMTo != ''">
+		  AND statis_date &lt;= #{lastYthisMTo}
+		</if>
+	    group by angle,angle_type
+	) f on a.angle = f.angle 
+	order by angleSecond
+  </select>
+
+  <select id="queryDayOfMonthST" resultMap="BaseResultMap">
+    SELECT statis_date as angle, sum(business_count) as indicatorValueCount
+    FROM data_sale_insurance
+    WHERE 1=1
+    <if test="angleType != null and angleType != ''">
+      AND angle_type = #{angleType}
+    </if>
+    <if test="angle != null and angle != ''">
+      AND angle = #{angle}
+    </if>
+    <if test="from != null and from != ''">
+      AND statis_date &gt;= #{from}
+    </if>
+    <if test="to != null and to != ''">
+      AND statis_date &lt;= #{to}
+    </if>
+    GROUP BY statis_date
+    order by statis_date
+  </select>
+  
+  <select id="querySupplierBarChart" resultMap="BaseResultMap">
+	    SELECT substring_index(angle, '-', -1) as angle, sum(business_count) as indicatorValueCount
+	    FROM data_sale_insurance
+	    WHERE 1=1
+	    <if test="angleType != null and angleType != ''">
+	      and angle_type = #{angleType}
+	    </if>
+	    <if test="city != null and city != ''">
+	      AND substring_index(angle, '-', 1) = (select replace(name,'市','') from t_city where city_id = #{city})
+	    </if>
+	    <if test="supplier != null and supplier != ''">
+	      AND substring_index(angle, '-', -1) = (select supplier_name from t_supplier where supplier_id = #{supplier})
+	    </if>
+	    <if test="from != null and from != ''">
+	      AND statis_date &gt;= #{from}
+	    </if>
+	    <if test="to != null and to != ''">
+	      AND statis_date &lt;= #{to}
+	    </if>
+	    GROUP BY substring_index(angle, '-', -1)
+	    order by substring_index(angle, '-', -1)
+	</select>
+	
+	<select id="querySupplierCurveChart" resultMap="SaleResultMap">
+	    select substring_index(angle, '-', -1) as angleFirst, statis_date as angleSecond, 
+	    	   sum(business_count) as busiCount 
+		from data_sale_insurance where 1=1
+		<if test="angleType != null and angleType != ''">
+	      and angle_type = #{angleType}
+	    </if>
+		<if test="city != null and city != ''">
+	      AND substring_index(angle, '-', 1) = (select replace(name,'市','') from t_city where city_id = #{city})
+	    </if>
+	    <if test="supplier != null and supplier != ''">
+	      AND substring_index(angle, '-', -1) = (select supplier_name from t_supplier where supplier_id = #{supplier})
+	    </if>
+		<if test="from != null and from != ''">
+	      AND statis_date &gt;= #{from}
+	    </if>
+	    <if test="to != null and to != ''">
+	      AND statis_date &lt;= #{to}
+	    </if>
+		group by substring_index(angle, '-', -1),statis_date
+	    order by substring_index(angle, '-', -1),statis_date
+    </select>
+    
+    <select id="queryCityBarChart" resultMap="BaseResultMap">
+	    SELECT substring_index(angle, '-', 1) as angle, sum(business_count) as indicatorValueCount
+	    FROM data_sale_insurance
+	    WHERE 1=1
+	    <if test="angleType != null and angleType != ''">
+	      and angle_type = #{angleType}
+	    </if>
+	    <if test="city != null and city != ''">
+	      AND substring_index(angle, '-', 1) = (select replace(name,'市','') from t_city where city_id = #{city})
+	    </if>
+	    <if test="supplier != null and supplier != ''">
+	      AND substring_index(angle, '-', -1) = (select supplier_name from t_supplier where supplier_id = #{supplier})
+	    </if>
+	    <if test="from != null and from != ''">
+	      AND statis_date &gt;= #{from}
+	    </if>
+	    <if test="to != null and to != ''">
+	      AND statis_date &lt;= #{to}
+	    </if>
+	    GROUP BY substring_index(angle, '-', 1)
+	    order by substring_index(angle, '-', 1)
+	</select>
+	
+	<select id="queryCityCurveChart" resultMap="SaleResultMap">
+	    select substring_index(angle, '-', 1) as angleFirst, statis_date as angleSecond, 
+	    	   sum(business_count) as busiCount 
+		from data_sale_insurance
+		where 1=1
+		<if test="angleType != null and angleType != ''">
+	      and angle_type = #{angleType}
+	    </if>
+		<if test="city != null and city != ''">
+	      AND substring_index(angle, '-', 1) = (select replace(name,'市','') from t_city where city_id = #{city})
+	    </if>
+	    <if test="supplier != null and supplier != ''">
+	      AND substring_index(angle, '-', -1) = (select supplier_name from t_supplier where supplier_id = #{supplier})
+	    </if>
+		<if test="from != null and from != ''">
+	      AND statis_date &gt;= #{from}
+	    </if>
+	    <if test="to != null and to != ''">
+	      AND statis_date &lt;= #{to}
+	    </if>
+		group by substring_index(angle, '-', 1),statis_date
+	    order by substring_index(angle, '-', 1),statis_date
+	</select>
+	 
+	<select id="queryChannelBarChart" resultMap="BaseResultMap">
+	    SELECT angle as angle, sum(business_count) as indicatorValueCount
+	    FROM data_sale_insurance
+	    WHERE 1=1
+	    <if test="angleType != null and angleType != ''">
+	      and angle_type = #{angleType}
+	    </if>
+	    <if test="from != null and from != ''">
+	      AND statis_date &gt;= #{from}
+	    </if>
+	    <if test="to != null and to != ''">
+	      AND statis_date &lt;= #{to}
+	    </if>
+	    GROUP BY angle
+	    order by angle
+	</select>
+	
+	<select id="queryChannelCurveChart" resultMap="SaleResultMap">
+	    select angle as angleFirst, statis_date as angleSecond, 
+	    	   sum(business_count) as busiCount 
+		from data_sale_insurance
+		where 1=1
+		<if test="angleType != null and angleType != ''">
+	      and angle_type = #{angleType}
+	    </if>
+		<if test="from != null and from != ''">
+	      AND statis_date &gt;= #{from}
+	    </if>
+	    <if test="to != null and to != ''">
+	      AND statis_date &lt;= #{to}
+	    </if>
+		group by angle,statis_date
+	    order by angle,statis_date
+	</select>
+	
+	<select id="queryActivityBarChart" resultMap="BaseResultMap">
+	    SELECT angle as angle, sum(business_count) as indicatorValueCount
+	    FROM data_sale_insurance
+	    WHERE 1=1 and angle != '单交强'
+	    <if test="angleType != null and angleType != ''">
+	      and angle_type = #{angleType}
+	    </if>
+	    <if test="from != null and from != ''">
+	      AND statis_date &gt;= #{from}
+	    </if>
+	    <if test="to != null and to != ''">
+	      AND statis_date &lt;= #{to}
+	    </if>
+	    GROUP BY angle
+	    order by angle
+	</select>
+	
+	<select id="queryActivityCurveChart" resultMap="SaleResultMap">
+	    select angle as angleFirst, statis_date as angleSecond, 
+	    	   sum(business_count) as busiCount 
+		from data_sale_insurance
+		where 1=1 and angle != '单交强'
+		<if test="angleType != null and angleType != ''">
+	      and angle_type = #{angleType}
+	    </if>
+		<if test="from != null and from != ''">
+	      AND statis_date &gt;= #{from}
+	    </if>
+	    <if test="to != null and to != ''">
+	      AND statis_date &lt;= #{to}
+	    </if>
+		group by angle,statis_date
+	    order by angle,statis_date
+	</select>
+	
+	<select id="queryDataChart" resultType="String">
+	    select statis_date as angleFirst
+		from data_sale_insurance
+		where 1=1
+		<if test="from != null and from != ''">
+	      AND statis_date &gt;= #{from}
+	    </if>
+	    <if test="to != null and to != ''">
+	      AND statis_date &lt;= #{to}
+	    </if>
+		group by statis_date
+	    order by statis_date
+	</select>
+	
+	<select id="queryCity" resultMap="BaseResultMap">
+	    select c.city_id as code,substring_index(angle, '-', 1) as angle
+		from data_sale_insurance d join t_city c on substring_index(d.angle, '-', 1)  = replace(c.name,'市','')
+		where angle_type = 'cityName_supplierName'
+		group by c.city_id,substring_index(angle, '-', 1)
+		order by c.city_id,substring_index(angle, '-', 1)
+	</select>
+	
+	<select id="querySupplier" resultMap="BaseResultMap">
+	    select supplier_id as code,supplier_name as angle
+		from data_sale_insurance join t_supplier on substring_index(angle, '-', -1) = supplier_name
+		where angle_type = 'cityName_supplierName'
+		group by supplier_id,substring_index(angle, '-', -1)
+	    order by supplier_id,substring_index(angle, '-', -1)
+	</select>
+	
+</mapper>

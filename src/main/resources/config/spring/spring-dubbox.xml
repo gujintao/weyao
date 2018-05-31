@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+  <dubbo:application name="com.weyao.api.crm.client" organization="1234ye" />
+
+  <dubbo:registry protocol="zookeeper" address="${zk.connectString}" />
+
+  <dubbo:reference id="dataProxySrv" interface="com.weyao.srv.dataproxy.DataProxySrv" check="false" />
+  <dubbo:reference id="coreSrv" interface="com.weyao.srv.core.CoreSrv" check="false" />
+  <dubbo:reference id="paySrv" interface="com.weyao.srv.pay.PaySrv" check="false" />
+  <dubbo:reference id="crmSrv" interface="com.weyao.srv.crm.CrmSrv" check="false" />
+  <dubbo:reference id="customerSrv" interface="com.weyao.srv.customer.CustomerSrv" check="false" />
+  <dubbo:reference id="dictionarySrv" interface="com.weyao.srv.dictionary.DictionarySrv" check="false" />
+  <dubbo:reference id="calcSrv" interface="com.weyao.srv.calc.CalcSrv" check="false" />
+  <dubbo:reference id="smsSrv" interface="com.weyao.srv.sms.SmsSrv" check="false" />
+  <dubbo:reference id="messageSrv" interface="com.weyao.srv.message.MessageSrv" check="false" />
+  <dubbo:reference id="brokerageSrv" interface="com.weyao.srv.brokerage.BrokerageSrv" check="false"/>
+  <dubbo:reference id="indicatorQuerySrv" interface="com.weyao.srv.indicatorquery.IndicatorQuerySrv" check="false"/>
+</beans>
+

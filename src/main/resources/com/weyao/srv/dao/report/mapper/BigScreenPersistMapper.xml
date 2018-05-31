@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.report.mapper.BigSreenPersistMapper">
+
+	<insert id="saveOrUpdateTrends" >
+	  <selectKey keyProperty="_count" resultType="int" order="BEFORE">
+	    SELECT count(*) as count from data_big_screen_trends where statis_date= #{statisDate}
+	  </selectKey>
+	  <if test="_count > 0">
+	    update data_big_screen_trends 
+	    set bidding_scale = #{biddingScale}, calc_times = #{calcTimes},
+	    service_owner = #{serviceOwner}, interaction_quantity = #{interactionQuantity},
+	    yyd_calc_times = #{yydCalcTimes}, jg_calc_times = #{jgCalcTimes},
+	    crm_calc_times = #{crmCalcTimes}, new_order_num = #{newOrderNum},
+	    finished_order_num = #{finishedOrderNum}
+	    where statis_date= #{statisDate}
+	  </if>
+	  <if test="_count == 0">
+	    insert into data_big_screen_trends (statis_date,bidding_scale,calc_times,service_owner,interaction_quantity,
+	    yyd_calc_times,jg_calc_times,crm_calc_times,new_order_num,finished_order_num)
+	    values(
+	    #{statisDate}, #{biddingScale}, #{calcTimes}, #{serviceOwner}, #{interactionQuantity},
+	    #{yydCalcTimes}, #{jgCalcTimes}, #{crmCalcTimes}, #{newOrderNum}, #{finishedOrderNum} 
+	    )
+	  </if>
+	</insert>
+	
+	<insert id="saveOrUpdateCalcRequest" >
+	  <selectKey keyProperty="_count" resultType="int" order="BEFORE">
+	    SELECT count(*) as count from data_big_screen_calc_request where statis_date= #{statisDate}
+	    and time_interval = #{timeInterval} and segment_stage = #{segmentStage}
+	  </selectKey>
+	  <if test="_count > 0">
+	    update data_big_screen_calc_request 
+	    set calc_request_times = #{calcRequestTimes}
+	    where statis_date= #{statisDate} and time_interval = #{timeInterval} and segment_stage = #{segmentStage}
+	  </if>
+	  <if test="_count == 0">
+	   INSERT INTO data_big_screen_calc_request
+       	(statis_date,time_interval,segment_stage,calc_request_times) 
+        VALUES 
+        (#{statisDate},#{timeInterval},#{segmentStage},#{calcRequestTimes})
+	  </if>
+	</insert>
+	
+</mapper>

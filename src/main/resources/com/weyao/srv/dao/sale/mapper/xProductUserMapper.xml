@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.sale.mapper.XProductUserMapper">
+
+	<resultMap id="BaseResultMap" type="com.weyao.srv.entity.XProductUser" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="insurance_end_date" property="insuranceEndDate" jdbcType="DATE" />
+		<result column="cx_count" property="cxCount" jdbcType="INTEGER" />
+		<result column="activity_name" property="activityName" jdbcType="VARCHAR" />
+		<result column="insurance_ptype" property="insurancePtype" jdbcType="VARCHAR" />
+		<result column="insurance_reviewed_amount" property="insuranceReviewedAmount" jdbcType="INTEGER" />
+		<result column="insurance_supplier_name" property="insuranceSupplierName" jdbcType="VARCHAR" />
+		<result column="insurance_create_time" property="insuranceCreateTime" jdbcType="TIMESTAMP" />
+		<result column="first_payment_time" property="firstPaymentTime" jdbcType="TIMESTAMP" />
+		<result column="cd_name" property="cdName" jdbcType="VARCHAR" />
+		<result column="vehicle_name" property="vehicleName" jdbcType="VARCHAR" />
+		<result column="vin" property="vin" jdbcType="VARCHAR" />
+		<result column="engine_no" property="engineNo" jdbcType="VARCHAR" />
+		<result column="register_date" property="registerDate" jdbcType="DATE" />
+		<result column="car_owner" property="carOwner" jdbcType="VARCHAR" />
+		<result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+		<result column="bank_card" property="bankCard" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		id, name, plate_number, mobile, insurance_end_date, cx_count, activity_name, insurance_ptype, insurance_reviewed_amount, insurance_supplier_name,
+		 insurance_create_time, first_payment_time, cd_name, vehicle_name, vin, engine_no, register_date, car_owner, bank_name, bank_card
+	</sql>
+
+	<select id="listXProductUser" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_x_product_user;
+	</select>
+
+	<update id="updateXProductUser" parameterType="com.weyao.srv.entity.XProductUser" >
+		update t_x_product_user
+		<set >
+			<if test="name != null" >
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="plateNumber != null" >
+				plate_number = #{plateNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null" >
+				mobile = #{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="insuranceEndDate != null" >
+				insurance_end_date = #{insuranceEndDate,jdbcType=DATE},
+			</if>
+			<if test="cxCount != null" >
+				cx_count = #{cxCount,jdbcType=INTEGER},
+			</if>
+			<if test="activityName != null" >
+				activity_name = #{activityName,jdbcType=VARCHAR},
+			</if>
+			<if test="insurancePtype != null" >
+				insurance_ptype = #{insurancePtype,jdbcType=VARCHAR},
+			</if>
+			<if test="insuranceReviewedAmount != null" >
+				insurance_reviewed_amount = #{insuranceReviewedAmount,jdbcType=INTEGER},
+			</if>
+			<if test="insuranceSupplierName != null" >
+				insurance_supplier_name = #{insuranceSupplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="insuranceCreateTime != null" >
+				insurance_create_time = #{insuranceCreateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="firstPaymentTime != null" >
+				first_payment_time = #{firstPaymentTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="cdName != null" >
+				cd_name = #{cdName,jdbcType=VARCHAR},
+			</if>
+			<if test="vehicleName != null" >
+				vehicle_name = #{vehicleName,jdbcType=VARCHAR},
+			</if>
+			<if test="vin != null" >
+				vin = #{vin,jdbcType=VARCHAR},
+			</if>
+			<if test="engineNo != null" >
+				engine_no = #{engineNo,jdbcType=VARCHAR},
+			</if>
+			<if test="registerDate != null" >
+				register_date = #{registerDate,jdbcType=DATE},
+			</if>
+			<if test="carOwner != null" >
+				car_owner = #{carOwner,jdbcType=VARCHAR},
+			</if>
+			<if test="bankName != null" >
+				bank_name = #{bankName,jdbcType=VARCHAR},
+			</if>
+			<if test="bankCard != null" >
+				bank_card = #{bankCard,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+</mapper>

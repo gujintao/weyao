@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.report.mapper.DataRegionalCalcPaidPersistMapper">
+	<insert id="saveOrUpdate" >
+	  <selectKey keyProperty="_count" resultType="int" order="BEFORE">
+	    SELECT count(*) as count from data_regional_calc_paid 
+	    where statis_date= #{statisDate} and city_id = #{cityId}
+	    and statis_date_week = #{statisDateWeek} and statis_date_month = #{statisDateMonth}
+	  </selectKey>
+	  <if test="_count > 0">
+	    update data_regional_calc_paid 
+	    set jg_calcCar_num = #{jgCalcCarNum}, yyd_calcCar_num = #{yydCalcCarNum},
+	    overall_calcCar_num = #{overallCalcCarNum}, jg_submitCar_num = #{jgSubmitCarNum},
+	    yyd_submitCar_num = #{yydSubmitCarNum}, overall_submitCar_num = #{overallSubmitCarNum},
+	    jg_paidCar_num = #{jgPaidCarNum}, yyd_paidCar_num = #{yydPaidCarNum},
+	    onlyTCI_paidCar_num = #{onlyTCIPaidCarNum}, overall_paidCar_num = #{overallPaidCarNum},
+	    month_paidOrder_num = #{monthPaidOrderNum}, month_paid_premium = #{monthPaidPremium}
+	    where statis_date= #{statisDate} and city_id = #{cityId}
+	    and statis_date_week = #{statisDateWeek} and statis_date_month = #{statisDateMonth}
+	  </if>
+	  <if test="_count == 0">
+	    insert into data_regional_calc_paid (statis_date,statis_date_week,statis_date_month,city_id,
+	    jg_calcCar_num, yyd_calcCar_num, overall_calcCar_num, jg_submitCar_num,
+	    yyd_submitCar_num, overall_submitCar_num, jg_paidCar_num, yyd_paidCar_num,
+	    onlyTCI_paidCar_num, overall_paidCar_num, month_paidOrder_num, month_paid_premium)
+	    values(
+	    #{statisDate}, #{statisDateWeek}, #{statisDateMonth}, #{cityId},
+	    #{jgCalcCarNum}, #{yydCalcCarNum},
+	    #{overallCalcCarNum}, #{jgSubmitCarNum},
+	    #{yydSubmitCarNum}, #{overallSubmitCarNum},
+	    #{jgPaidCarNum}, #{yydPaidCarNum},
+	    #{onlyTCIPaidCarNum}, #{overallPaidCarNum},
+	    #{monthPaidOrderNum}, #{monthPaidPremium}
+	    )
+	  </if>
+	</insert>
+</mapper>

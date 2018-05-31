@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+  xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
+    http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+  default-autowire="byName">
+
+  <context:annotation-config />
+  <context:component-scan base-package="com.weyao.srv.report.*" />
+    
+    <bean id="insuranceFinanceReportService" class="com.weyao.srv.report.service.impl.InsuranceFinanceReportService">
+    <property name="intercepters">
+      <list>
+             <bean   class="com.weyao.srv.report.intercepter.impl.InsuranceStatusIntercepter">
+                <constructor-arg name="reportMapper" ref="insuranceFinanceReportMapper"></constructor-arg>
+                <constructor-arg name="sourceFieldName" value="insuranceStatus"></constructor-arg>
+                <constructor-arg name="targetFieldName" value="statusName"></constructor-arg>
+                <constructor-arg name="forceUpdate" value="false"></constructor-arg>
+            </bean>
+            <!-- 一定要放在最后，否则加密后的订单id会被修改到数据库中 -->
+            <bean   class="com.weyao.srv.report.intercepter.impl.EecodeOrderIntercepter">
+                <constructor-arg name="reportMapper" ref="insuranceFinanceReportMapper"></constructor-arg>
+                <constructor-arg name="sourceFieldName" value="orderId"></constructor-arg>
+                <constructor-arg name="targetFieldName" value="orderId"></constructor-arg>
+                <constructor-arg name="forceUpdate" value="false"></constructor-arg>
+            </bean>
+      </list>
+    </property>
+    </bean>
+    
+    <bean id="yydOnlinePaymentReportService" class="com.weyao.srv.report.service.impl.YydOnlinePaymentReportService">
+    <property name="intercepters">
+      <list>
+            <!-- 一定要放在最后，否则加密后的订单id会被修改到数据库中 -->
+            <bean   class="com.weyao.srv.report.intercepter.impl.EecodeOrderIntercepter">
+                <constructor-arg name="reportMapper" ref="yydOnlinePaymentReportMapper"></constructor-arg>
+                <constructor-arg name="sourceFieldName" value="orderId"></constructor-arg>
+                <constructor-arg name="targetFieldName" value="orderId"></constructor-arg>
+                <constructor-arg name="forceUpdate" value="false"></constructor-arg>
+            </bean>
+      </list>
+    </property>
+    </bean>
+    
+    <bean id="lbDailyRecordReportService" class="com.weyao.srv.report.service.impl.LBDailyRecordReportService"></bean>
+    
+    <bean id="deliveryReportService" class="com.weyao.srv.report.service.impl.DeliveryReportService">
+    	<property name="intercepters">
+	      <list>
+	            <!-- 一定要放在最后，否则加密后的订单id会被修改到数据库中 -->
+	            <bean   class="com.weyao.srv.report.intercepter.impl.EecodeOrderIntercepter">
+	                <constructor-arg name="reportMapper" ref="yydOnlinePaymentReportMapper"></constructor-arg>
+	                <constructor-arg name="sourceFieldName" value="orderId"></constructor-arg>
+	                <constructor-arg name="targetFieldName" value="orderId"></constructor-arg>
+	                <constructor-arg name="forceUpdate" value="false"></constructor-arg>
+	            </bean>
+	      </list>
+    	</property>
+    </bean>
+    
+</beans>

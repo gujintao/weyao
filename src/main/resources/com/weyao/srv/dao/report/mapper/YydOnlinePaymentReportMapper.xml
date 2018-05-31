@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.report.mapper.YydOnlinePaymentReportMapper">
+	<resultMap id="BaseResultMap" type="com.weyao.srv.report.entity.YydOnlinePaymentReport">
+		<id column="orderId" property="orderId" jdbcType="BIGINT" />
+	    <result column="carNumber" property="carNumber" jdbcType="VARCHAR" />
+	    <result column="paymentTime" property="paymentTime" jdbcType="TIMESTAMP" />
+	    <result column="payStyle" property="payStyle" jdbcType="VARCHAR" />
+	    <result column="commission" property="commission" jdbcType="REAL" />
+	    <result column="opName" property="opName" jdbcType="VARCHAR" />
+	    <result column="sourceType" property="sourceType" jdbcType="VARCHAR" />
+	    <result column="supplierName" property="supplierName" jdbcType="VARCHAR" />
+	    <result column="addressMsg" property="addressMsg" jdbcType="VARCHAR" />
+	    <result column="mobile" property="mobile" jdbcType="CHAR" />
+	    <result column="recipientName" property="recipientName" jdbcType="VARCHAR" />
+	    <result column="insuranceCity" property="insuranceCity" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getTotalCount" parameterType="java.util.Map"
+		resultType="Integer">
+		select count(1)
+		from
+		(select ord.order_id from t_order ord join t_car car on car.car_id = ord.car_id
+		join t_order_payment_flow ordflow on ordflow.order_id = ord.order_id
+		join t_insurance ti on ti.order_id = ord.order_id
+		where ord.pay_style in(180,190,200)
+		and ord.source_type in(300,400)
+		and ordflow.flow_type = 3
+		<if test="paymentStartTime != null and paymentStartTime != '' ">
+			<![CDATA[ AND ordflow.create_time >= #{paymentStartTime} ]]>
+		</if>
+		<if test="paymentEndTime != null and paymentEndTime != '' ">
+			<![CDATA[ AND ordflow.create_time < #{paymentEndTime} ]]>
+		</if>
+		group by ord.order_id) a;
+	</select>
+
+	<select id="listReport" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select ord.order_id AS orderId,car.plate_number as carNumber,ordflow.create_time as paymentTime,
+		(select name from t_dictionary where type = 10019 and code = ord.pay_style) as payStyle,
+		round((sum(ti.insurance_reviewed_amount)-ord.real_amount)/100,2) as commission,
+		(select name from t_operator where operator_id = ord.op_id) as opName,
+		case when ord.source_type = 300 then '经纪人' else '又一单' end as sourceType,
+		ti.supplier_name AS supplierName, ord.address_msg as addressMsg, ord.mobile as mobile, ord.recipient_name as recipientName,
+		(select name from t_city where city_id = ti.city_id) as insuranceCity
+		from t_order ord join t_car car on car.car_id = ord.car_id
+		join t_order_payment_flow ordflow on ordflow.order_id = ord.order_id
+		join t_insurance ti on ti.order_id = ord.order_id
+		where ord.pay_style in(180,190,200) 
+		and ord.source_type in(300,400) 
+		and ordflow.flow_type = 3
+		<if test="paymentStartTime != null and paymentStartTime != '' ">
+			<![CDATA[ AND ordflow.create_time >= #{paymentStartTime} ]]>
+		</if>
+		<if test="paymentEndTime != null and paymentEndTime != '' ">
+			<![CDATA[ AND ordflow.create_time < #{paymentEndTime} ]]>
+		</if>
+		group by ord.order_id
+		order by ordflow.create_time;
+	</select>
+	<update id="updateReport" parameterType="com.weyao.srv.report.entity.YydOnlinePaymentReport">
+		 
+	</update>
+
+</mapper>

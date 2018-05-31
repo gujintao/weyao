@@ -1,0 +1,1 @@
+kill -s 15 `ps -ef | grep "main.SrvTimerTaskMain" | grep -v grep | awk '{print $2}'`

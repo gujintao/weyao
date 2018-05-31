@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.report.mapper.DataRegionalOperationPersistMapper">
+	<insert id="saveOrUpdate" >
+	  <selectKey keyProperty="_count" resultType="int" order="BEFORE">
+	    SELECT count(*) as count from data_regional_operation where statis_date= #{statisDate} and city_id = #{cityId}
+	  </selectKey>
+	  <if test="_count > 0">
+	    update data_regional_operation 
+	    set day_paidCar_num = #{dayPaidCarNum}, day_paidBusiCar_num = #{dayPaidBusiCarNum},
+	    month_paidCar_num = #{monthPaidCarNum}, month_paidBusiCar_num = #{monthPaidBusiCarNum},
+	    month_paidOrder_num = #{monthPaidOrderNum}, month_paid_premium = #{monthPaidPremium},
+	    month_cancel_num = #{monthCancelNum}, month_cancel_premium = #{monthCancelPremium},
+	    day_calcCar_num = #{dayCalcCarNum}, month_calcCar_num = #{monthCalcCarNum},
+	    bee_total_num = #{beeTotalNum}, yyd_bee_total_num = #{yydBeeTotalNum},
+	    day_bee_activity = #{dayBeeActivity}, thirty_days_bee_activity = #{thirtyDaysBeeActivity},
+	    thirty_days_order_activity = #{thirtyDaysOrderActivity}, thirty_days_VCIorder_activity = #{thirtyDaysVCIorderActivity}
+	    where statis_date= #{statisDate} and city_id = #{cityId}
+	  </if>
+	  <if test="_count == 0">
+	    insert into data_regional_operation (statis_date,city_id,day_paidCar_num,day_paidBusiCar_num,month_paidCar_num,month_paidBusiCar_num,
+	    month_paidOrder_num,month_paid_premium,month_cancel_num,month_cancel_premium,day_calcCar_num,month_calcCar_num,bee_total_num,
+	    yyd_bee_total_num,day_bee_activity,thirty_days_bee_activity,thirty_days_order_activity,thirty_days_VCIorder_activity)
+	    values(
+	    #{statisDate}, #{cityId},
+	    #{dayPaidCarNum}, #{dayPaidBusiCarNum},
+	    #{monthPaidCarNum}, #{monthPaidBusiCarNum},
+	    #{monthPaidOrderNum}, #{monthPaidPremium},
+	    #{monthCancelNum}, #{monthCancelPremium},
+	    #{dayCalcCarNum}, #{monthCalcCarNum},
+	    #{beeTotalNum}, #{yydBeeTotalNum},
+	    #{dayBeeActivity}, #{thirtyDaysBeeActivity},
+	    #{thirtyDaysOrderActivity}, #{thirtyDaysVCIorderActivity}
+	    )
+	  </if>
+	</insert>
+</mapper>

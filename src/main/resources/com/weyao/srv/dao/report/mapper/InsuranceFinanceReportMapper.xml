@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.report.mapper.InsuranceFinanceReportMapper">
+	<resultMap id="BaseResultMap" type="com.weyao.srv.report.entity.InsuranceFinanceReport">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<id column="order_id" property="orderId" jdbcType="BIGINT" />
+	    <result column="dianfu" property="dianfu" jdbcType="VARCHAR" />
+	    <result column="dianfu_date" property="dianfuDate" jdbcType="VARCHAR" />
+	    <result column="order_create_time" property="orderCreateTime" jdbcType="TIMESTAMP" />
+	    <result column="channel_type" property="channelType" jdbcType="VARCHAR" />
+	    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+	    <result column="force_activity_name" property="forceActivityName" jdbcType="VARCHAR" />
+	    <result column="business_activity_name" property="businessActivityName" jdbcType="VARCHAR" />
+	    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+	    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+	    <result column="op_name" property="opName" jdbcType="VARCHAR" />
+	    <result column="car_number" property="carNumber" jdbcType="VARCHAR" />
+	    <result column="insurance_person" property="insurancePerson" jdbcType="VARCHAR" />
+	    <result column="force_number" property="forceNumber" jdbcType="VARCHAR" />
+	    <result column="business_number" property="businessNumber" jdbcType="VARCHAR" />
+	    <result column="force_amount" property="forceAmount" jdbcType="REAL" />
+	    <result column="tax_amount" property="taxAmount" jdbcType="REAL" />
+	    <result column="business_amount" property="businessAmount" jdbcType="REAL" />
+	    <result column="insurance_reviewed_amount" property="insuranceReviewedAmount" jdbcType="REAL" />
+	    <result column="dianfu_amount" property="dianfuAmount" jdbcType="REAL" />
+	    <result column="force_zhekou" property="forceZhekou" jdbcType="REAL" />
+	    <result column="business_zhekou" property="businessZhekou" jdbcType="REAL" />
+	    <result column="force_zhekou_amount" property="forceZhekouAmount" jdbcType="REAL" />
+	    <result column="business_zhekou_amount" property="businessZhekouAmount" jdbcType="REAL" />
+	    <result column="force_coupon_amount" property="forceCouponAmount" jdbcType="REAL" />
+	    <result column="business_coupon_amount" property="businessCouponAmount" jdbcType="REAL" />
+	    <result column="real_amount" property="realAmount" jdbcType="REAL" />
+
+
+		<result column="order_extra_amount" property="orderExtraAmount" jdbcType="REAL" />
+		<result column="order_outcome" property="orderOutcome" jdbcType="REAL" />
+		<result column="order_user_pay" property="orderUserPay" jdbcType="REAL" />
+
+
+	    <result column="receive_amount" property="receiveAmount" jdbcType="REAL" />
+	    <result column="chae_amount" property="chaeAmount" jdbcType="REAL" />
+	    <result column="wancheng" property="wancheng" jdbcType="VARCHAR" />
+	    <result column="lipin" property="lipin" jdbcType="VARCHAR" />
+	    <result column="status_name" property="statusName" jdbcType="VARCHAR" />
+	    <result column="insurance_status" property="insuranceStatus" jdbcType="INTEGER" />
+	    <result column="flow_detail" property="flowDetail" jdbcType="VARCHAR" />
+	    <result column="city_id" property="cityId" jdbcType="INTEGER" />
+	    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+	    <result column="version_id" property="versionId" jdbcType="INTEGER" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="psy_time" property="payTime" jdbcType="TIMESTAMP" />
+	    <result column="pay_style" property="payStyle" jdbcType="VARCHAR" />
+	    <result column="oem_name" property="oemName" jdbcType="VARCHAR" />
+	    <result column="oem_payment_mode" property="oemPaymentMode" jdbcType="VARCHAR" />
+	    <result column="flow_finish_time" property="flowFinishTime" jdbcType="TIMESTAMP" />
+	    <result column="out_trade_no" property="outTradeNo" jdbcType="VARCHAR" />
+	    <result column="force_commission_amount" property="forceCommissionAmount" jdbcType="REAL" />
+	    <result column="business_commission_amount" property="businessCommissionAmount" jdbcType="REAL" />
+	    <result column="force_rule_formula" property="forceRuleFormula" jdbcType="VARCHAR" />
+	    <result column="business_rule_formula" property="businessRuleFormula" jdbcType="VARCHAR" />
+	    <result column="force_commission_rate" property="forceCommissionRate" jdbcType="VARCHAR" />
+	    <result column="business_commission_rate" property="businessCommissionRate" jdbcType="VARCHAR" />
+	    <result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+	    <result column="oem_agency_name" property="oemAgencyName" jdbcType="VARCHAR" />
+	    <result column="order_source_type" property="orderSourceType" jdbcType="VARCHAR" />
+	    <result column="force_insurance_operations_amount" property="forceInsuranceOperationsAmount" jdbcType="REAL" />
+	    <result column="business_insurance_operations_amount" property="businessInsuranceOperationsAmount" jdbcType="REAL" />
+	    <result column="force_insurance_operations_formula" property="forceInsuranceOperationsFormula" jdbcType="VARCHAR" />
+	    <result column="business_insurance_operations_formula" property="businessInsuranceOperationsFormula" jdbcType="VARCHAR" />
+	    <result column="force_insurance_operations_percentage" property="forceInsuranceOperationsPercentage" jdbcType="VARCHAR" />
+	    <result column="business_insurance_operations_percentage" property="businessInsuranceOperationsPercentage" jdbcType="VARCHAR" />
+	    <result column="insurance_products_payFirst_amount" property="insuranceProductsPayFirstAmount" jdbcType="REAL" />
+	    <result column="express_name" property="expressName" jdbcType="VARCHAR" />
+	    <result column="delivery_times" property="deliveryTimes" jdbcType="INTEGER" />
+	    <result column="force_insurance_start_date" property="forceInsuranceStartDate" jdbcType="TIMESTAMP" />
+	    <result column="business_insurance_start_date" property="businessInsuranceStartDate" jdbcType="TIMESTAMP" />
+	    <result column="force_insurance_end_date" property="forceInsuranceEndDate" jdbcType="TIMESTAMP" />
+	    <result column="business_insurance_end_date" property="businessInsuranceEndDate" jdbcType="TIMESTAMP" />
+	    <result column="signing_company_name" property="signingCompanyName" jdbcType="VARCHAR" />
+	    <result column="cid" property="cid" jdbcType="BIGINT" />
+	    <result column="dianfu_comment" property="dianfuComment" jdbcType="VARCHAR" />
+		<result column="force_reward" property="forceReward" jdbcType="REAL" />
+		<result column="business_reward" property="businessReward" jdbcType="REAL" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, order_id, dianfu as dianfu_date, dianfu, order_create_time, channel_type, channel_name, force_activity_name, business_activity_name, 
+    supplier_id, supplier_name, op_name, car_number, insurance_person, force_number, business_number, 
+    force_amount, tax_amount, business_amount, insurance_reviewed_amount, dianfu_amount, force_zhekou, business_zhekou, 
+    force_zhekou_amount, business_zhekou_amount,insurance_products_payFirst_amount, force_coupon_amount, business_coupon_amount, 
+    real_amount, order_extra_amount,order_outcome,order_user_pay,  receive_amount, chae_amount, wancheng, lipin, status_name, insurance_status, flow_detail,
+    city_id, city_name, psy_time, pay_style, oem_name, oem_payment_mode,flow_finish_time,out_trade_no,force_commission_amount,
+    business_commission_amount,force_rule_formula,business_rule_formula,force_commission_rate,business_commission_rate,oem_code,
+    oem_agency_name,order_source_type,force_insurance_operations_amount,business_insurance_operations_amount,
+    force_insurance_operations_formula,business_insurance_operations_formula,force_insurance_operations_percentage,
+    business_insurance_operations_percentage,express_name,delivery_times,force_insurance_start_date,business_insurance_start_date,
+    force_insurance_end_date,business_insurance_end_date,signing_company_name,cid,dianfu_comment, force_reward, business_reward
+    
+	</sql>
+
+	<sql id="Base_Query_Column_List">
+		<if test="id != null">
+			AND id = #{id}
+		</if>
+		<if test="orderId != null">
+			AND order_id = #{orderId}
+		</if>
+		<if test="dianfuStartTime != null and dianfuStartTime != '' ">
+			<![CDATA[ AND dianfu >= #{dianfuStartTime} ]]>
+		</if>
+		<if test="dianfuEndTime != null and dianfuEndTime != '' ">
+			<![CDATA[ AND dianfu < #{dianfuEndTime} ]]>
+		</if>
+		<if test="orderStartTime != null and orderStartTime != '' ">
+			<![CDATA[ AND order_create_time >= #{orderStartTime} ]]>
+		</if>
+		<if test="orderEndTime != null and orderEndTime != '' ">
+			<![CDATA[ AND order_create_time < #{orderEndTime} ]]>
+		</if>
+		<if test="channelType != null and channelType != ''">
+			AND channel_type = #{channelType}
+		</if>
+		<if test="channelName != null and channelName != ''">
+			AND channel_name = #{channelName}
+		</if>
+		<if test="forceActivityName != null and forceActivityName != ''">
+			AND force_activity_name = #{forceActivityName}
+		</if>
+		<if test="businessActivityName != null and businessActivityName != ''">
+			AND business_activity_name = #{businessActivityName}
+		</if>
+		<if test="supplierId != null">
+			AND supplier_id = #{supplierId}
+		</if>
+		<if test="supplierName != null and supplierName != ''">
+			AND supplier_name = #{supplierName}
+		</if>
+		<if test="opName != null and opName != ''">
+			AND op_name = #{opName}
+		</if>
+		<if test="carNumber != null and carNumber != ''">
+			AND car_number = #{carNumber}
+		</if>
+		<if test="insurancePerson != null and insurancePerson != ''">
+			AND insurance_person = #{insurancePerson}
+		</if>
+		<if test="forceNumber != null and forceNumber != ''">
+			AND force_number = #{forceNumber}
+		</if>
+		<if test="businessNumber != null and businessNumber != ''">
+			AND business_number = #{businessNumber}
+		</if>
+		<if test="forceAmount != null">
+			AND force_amount = #{forceAmount}
+		</if>
+		<if test="taxAmount != null">
+			AND tax_amount = #{taxAmount}
+		</if>
+		<if test="dianfuAmount != nul">
+			AND dianfu_amount = #{dianfuAmount}
+		</if>
+		<if test="forceZhekou != null">
+			AND force_zhekou = #{forceZhekou}
+		</if>
+		<if test="businessZhekou != null">
+			AND business_zhekou = #{businessZhekou}
+		</if>
+		<if test="forceZhekouAmount != null">
+			AND force_zhekou_amount = #{forceZhekouAmount}
+		</if>
+		<if test="businessZhekouAmount != null">
+			AND business_zhekou_amount = #{businessZhekouAmount}
+		</if>
+		<if test="forceCouponAmount != null">
+			AND force_coupon_amount = #{forceCouponAmount}
+		</if>
+		<if test="businessCouponAmount != null">
+			AND business_coupon_amount = #{businessCouponAmount}
+		</if>
+		<if test="realAmount != null">
+			AND real_amount = #{realAmount}
+		</if>
+
+
+
+
+
+
+		<if test="orderExtraAmount != null">
+			AND order_extra_amount = #{orderExtraAmount}
+		</if>
+		<if test="orderOutcome != null">
+			AND order_outcome = #{orderOutcome}
+		</if>
+		<if test="orderUserPay != null">
+			AND order_user_pay = #{orderUserPay}
+		</if>
+
+
+
+
+
+		<if test="receiveAmount != null">
+			AND receive_amount > #{receiveAmount}
+		</if>
+		<if test="chaeAmount != null">
+			AND chae_amount = #{chaeAmount}
+		</if>
+		
+		<if test="wancheng != null and wancheng != ''">
+			AND wancheng = #{wancheng}
+		</if>
+		<if test="lipin != null and lipin != ''">
+			AND lipin = #{lipin}
+		</if>
+		<if test="statusName != null and statusName != ''">
+			AND status_name = #{statusName}
+		</if>
+		<if test="insuranceStatus != null">
+			AND insurance_status = #{insuranceStatus}
+		</if>
+		<if test="flowDetail != null and flowDetail != ''">
+			AND flow_detail = #{flowDetail}
+		</if>
+		<if test="cityId != null">
+			AND city_id = #{cityId}
+		</if>
+		<if test="cityName != null and cityName != ''">
+			AND city_Name = #{cityName}
+		</if>
+		<if test="versionId != null">
+			AND version_id = #{versionId}
+		</if>
+		
+	</sql>
+
+	<select id="getTotalCount" parameterType="java.util.Map"
+		resultType="Integer">
+		SELECT COUNT(1)
+		FROM `t_insurance_finance_show_report_new`
+		WHERE 1 = 1 and version_id = (select max(version_id) from t_insurance_finance_show_report_new)
+		<include refid="Base_Query_Column_List" />
+	</select>
+
+	<select id="listReport" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM `t_insurance_finance_show_report_new`
+		WHERE 1 = 1 and version_id = (select max(version_id) from t_insurance_finance_show_report_new)
+		and ((flow_finish_time &lt; '2018-01-01' and insurance_status not in(12))
+			or flow_finish_time &gt;= '2018-01-01'
+			or flow_finish_time = '0000-00-00 00:00:00')
+		<include refid="Base_Query_Column_List" />
+		ORDER BY dianfu DESC
+		<if test="pageBean != null">
+			LIMIT #{pageBean.start}, #{pageBean.pageSize}
+		</if>
+	</select>
+	<update id="updateReport" parameterType="com.weyao.srv.report.entity.InsuranceFinanceReport">
+		UPDATE t_insurance_finance_show_report_new
+		<set>
+		  <if test="orderId != null">
+			order_id = #{orderId},
+		  </if>
+		  <if test="dianfu != null" >
+	        dianfu = #{dianfu,jdbcType=VARCHAR},
+	      </if>
+	      <if test="orderCreateTime != null">
+			order_create_time = #{orderCreateTime},
+		  </if>
+	      <if test="channelType != null" >
+	        channel_type = #{channelType,jdbcType=VARCHAR},
+	      </if>
+	      <if test="channelName != null" >
+	        channel_name = #{channelName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="forceActivityName != null" >
+	        force_activity_name = #{forceActivityName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="businessActivityName != null" >
+	        business_activity_name = #{businessActivityName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="supplierId != null" >
+	        supplier_id = #{supplierId},
+	      </if>
+	      <if test="supplierName != null" >
+	        supplier_name = #{supplierName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="opName != null" >
+	        op_name = #{opName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="carNumber != null" >
+	        car_number = #{carNumber,jdbcType=VARCHAR},
+	      </if>
+	      <if test="insurancePerson != null" >
+	        insurance_person = #{insurancePerson,jdbcType=VARCHAR},
+	      </if>
+	      <if test="forceNumber != null" >
+	        force_number = #{forceNumber,jdbcType=VARCHAR},
+	      </if>
+	      <if test="businessNumber != null" >
+	        business_number = #{businessNumber,jdbcType=VARCHAR},
+	      </if>
+	      <if test="forceAmount != null" >
+	        force_amount = #{forceAmount,jdbcType=REAL},
+	      </if>
+	      <if test="taxAmount != null" >
+	        tax_amount = #{taxAmount,jdbcType=REAL},
+	      </if>
+	      <if test="businessAmount != null" >
+	        business_amount = #{businessAmount,jdbcType=REAL},
+	      </if>
+	      <if test="dianfuAmount != null" >
+	        dianfu_amount = #{dianfuAmount,jdbcType=REAL},
+	      </if>
+	      <if test="forceZhekou != null" >
+	        force_zhekou = #{forceZhekou,jdbcType=REAL},
+	      </if>
+	      <if test="businessZhekou != null" >
+	        business_zhekou = #{businessZhekou,jdbcType=REAL},
+	      </if>
+	      <if test="forceZhekouAmount != null" >
+	        force_zhekou_amount = #{forceZhekouAmount,jdbcType=REAL},
+	      </if>
+	      <if test="businessZhekouAmount != null" >
+	        business_zhekou_amount = #{businessZhekouAmount,jdbcType=REAL},
+	      </if>
+	      <if test="forceCouponAmount != null" >
+	        force_coupon_amount = #{forceCouponAmount,jdbcType=REAL},
+	      </if>
+	      <if test="businessCouponAmount != null" >
+	        business_coupon_amount = #{businessCouponAmount,jdbcType=REAL},
+	      </if>
+	      <if test="realAmount != null" >
+	        real_amount = #{realAmount,jdbcType=REAL},
+	      </if>
+
+
+
+			<if test="orderExtraAmount != null">
+				 order_extra_amount = #{orderExtraAmount,jdbcType=REAL},
+			</if>
+			<if test="orderOutcome != null">
+				 order_outcome = #{orderOutcome,jdbcType=REAL},
+			</if>
+			<if test="orderUserPay != null">
+				 order_user_pay = #{orderUserPay,jdbcType=REAL},
+			</if>
+
+
+
+	      <if test="receiveAmount != null" >
+	        receive_amount = #{receiveAmount,jdbcType=REAL},
+	      </if>
+	      <if test="chaeAmount != null" >
+	        chae_amount = #{chaeAmount,jdbcType=REAL},
+	      </if>
+	      <if test="wancheng != null" >
+	        wancheng = #{wancheng,jdbcType=VARCHAR},
+	      </if>
+	      <if test="lipin != null" >
+	        lipin = #{lipin,jdbcType=VARCHAR},
+	      </if>
+	      <if test="statusName != null" >
+	        status_name = #{statusName,jdbcType=VARCHAR},
+	      </if>
+	      <if test="insuranceStatus != null" >
+	        insurance_status = #{insuranceStatus,jdbcType=INTEGER},
+	      </if>
+	      <if test="flowDetail != null" >
+	        flow_detail = #{flowDetail,jdbcType=VARCHAR},
+	      </if>
+	      <if test="versionId != null" >
+	        version_id = #{versionId,jdbcType=INTEGER},
+	      </if>
+	      <if test="createTime != null" >
+	        create_time = #{createTime,jdbcType=TIMESTAMP},
+	      </if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+</mapper>

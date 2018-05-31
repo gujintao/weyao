@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.report.mapper.DataRegionalClassifyAchievePersistMapper">
+	<insert id="saveOrUpdate" >
+	  <selectKey keyProperty="_count" resultType="int" order="BEFORE">
+	    SELECT count(*) as count from data_regional_classify_achieve 
+	    where statis_date= #{statisDate} and city_id = #{cityId}
+	    and classify_type = #{classifyType} and classify_code = #{classifyCode} and classify_name = #{classifyName}
+	  </selectKey>
+	  <if test="_count > 0">
+	    update data_regional_classify_achieve 
+	    set classify_name = #{classifyName}, jg_calc_car = #{jgCalcCar},
+	    yyd_calc_car = #{yydCalcCar}, overall_calc_car = #{overallCalcCar},
+	    jg_paidVCI_car = #{jgPaidVCICar}, yyd_paidVCI_car = #{yydPaidVCICar},
+	    only_paidTCI_car = #{onlyPaidTCICar}, overall_paidVCI_car = #{overallPaidVCICar}
+	    where statis_date= #{statisDate} and city_id = #{cityId}
+	    and classify_type = #{classifyType} and classify_code = #{classifyCode} and classify_name = #{classifyName}
+	  </if>
+	  <if test="_count == 0">
+	    insert into data_regional_classify_achieve (statis_date,city_id,classify_type,classify_code, 
+	    classify_name, jg_calc_car, yyd_calc_car, overall_calc_car,
+	    jg_paidVCI_car, yyd_paidVCI_car, only_paidTCI_car, overall_paidVCI_car)
+	    values(
+	    #{statisDate}, #{cityId}, #{classifyType}, #{classifyCode},
+	    #{classifyName}, #{jgCalcCar}, #{yydCalcCar}, #{overallCalcCar},
+	    #{jgPaidVCICar}, #{yydPaidVCICar},  #{onlyPaidTCICar}, #{overallPaidVCICar} 
+	    )
+	  </if>
+	</insert>
+</mapper>

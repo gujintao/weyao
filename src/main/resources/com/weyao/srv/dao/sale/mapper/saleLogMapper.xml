@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.sale.mapper.SaleLogMapper">
+
+	<resultMap id="BaseResultMap" type="com.weyao.srv.entity.Sale" >
+		<id column="sale_id" property="saleId" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="city_id" property="cityId" jdbcType="INTEGER" />
+		<result column="insurance_company" property="insuranceCompany" jdbcType="INTEGER" />
+		<result column="insurance_items" property="insuranceItems" jdbcType="LONGVARCHAR" />
+		<result column="activity_info" property="activityInfo" jdbcType="LONGVARCHAR" />
+		<result column="strategy_info" property="strategyInfo" jdbcType="LONGVARCHAR" />
+		<result column="topic_url" property="topicUrl" jdbcType="VARCHAR" />
+		<result column="landing_page_info" property="landingPageInfo" jdbcType="LONGVARCHAR" />
+		<result column="general_page_info" property="generalPageInfo" jdbcType="LONGVARCHAR" />
+		<result column="main_page_info" property="mainPageInfo" jdbcType="LONGVARCHAR" />
+		<result column="fail_page_info" property="failPageInfo" jdbcType="LONGVARCHAR" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="customer_num" property="customerNum" jdbcType="INTEGER" />
+		<result column="calc_num" property="calcNum" jdbcType="INTEGER" />
+		<result column="order_num" property="orderNum" jdbcType="INTEGER" />
+		<result column="order_succ_num" property="orderSuccNum" jdbcType="INTEGER" />
+		<result column="batch_num" property="batchNum" jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap id="SaleUrlResultMap" type="com.weyao.srv.entity.SaleUrl" >
+		<id column="url_id" property="urlId" jdbcType="BIGINT" />
+		<result column="sale_id" property="saleId" jdbcType="BIGINT" />
+		<result column="topic_url" property="topicUrl" jdbcType="VARCHAR" />
+		<result column="batch_id" property="batchId" jdbcType="INTEGER" />
+		<result column="batch_url" property="batchUrl" jdbcType="VARCHAR" />
+		<result column="batch_short_url" property="batchShortUrl" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="customer_num" property="customerNum" jdbcType="INTEGER" />
+		<result column="calc_num" property="calcNum" jdbcType="INTEGER" />
+		<result column="order_num" property="orderNum" jdbcType="INTEGER" />
+		<result column="order_succ_num" property="orderSuccNum" jdbcType="INTEGER" />
+		<result column="batch_num" property="batchNum" jdbcType="INTEGER" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		sale_id, name, type, city_id, insurance_company, insurance_items, activity_info, strategy_info,
+		topic_url, landing_page_info, general_page_info, main_page_info, fail_page_info, status, start_time, end_time,
+		customer_num, calc_num, order_num, order_succ_num, batch_num,update_time, create_time
+	</sql>
+
+	<sql id="Sale_Url_Column_List">
+		url_id, sale_id, topic_url, batch_id, batch_url, batch_short_url, status, customer_num, calc_num, order_num, order_succ_num, batch_num,update_time, create_time
+	</sql>
+
+	<select id="getAllSaleInfo" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM t_sale;
+	</select>
+
+	<select id="getAllBatchUrlInfo" resultMap="SaleUrlResultMap">
+		SELECT
+			<include refid="Sale_Url_Column_List" />
+		FROM t_sale_url where status=1;
+	</select>
+	<!--获客数-->
+	<select id="getCustomerNum" resultType="int">
+		select
+		count(distinct car_id) customer_num
+		from t_sale_record
+		where sale_id = #{saleId,jdbcType=BIGINT}
+		<if test="batchId != null" >
+			and batch_id = #{batchId,jdbcType=INTEGER}
+		</if>
+		and status = 100
+		and cid != -1
+		and car_id is not null
+	</select>
+	<!--算价数-->
+	<select id="getCalcNum" resultType="int">
+		select
+		count(1) calc_num
+		from t_sale_record
+		where sale_id = #{saleId,jdbcType=BIGINT}
+		<if test="batchId != null" >
+			and batch_id = #{batchId,jdbcType=INTEGER}
+		</if>
+		and status = 100
+	</select>
+	<!--渠道数-->
+	<select id="getBatchNum" resultType="int" parameterType="java.lang.Long" >
+		select
+			count(1) batch_num
+		from t_sale_url
+		where sale_id = #{saleId,jdbcType=BIGINT} and status=1
+	</select>
+
+	<update id="updateSale" parameterType="com.weyao.srv.entity.Sale" >
+		update t_sale
+		<set >
+			<if test="name != null" >
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null" >
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="cityId != null" >
+				city_id = #{cityId,jdbcType=INTEGER},
+			</if>
+			<if test="insuranceCompany != null" >
+				insurance_company = #{insuranceCompany,jdbcType=INTEGER},
+			</if>
+			<if test="insuranceItems != null" >
+				insurance_items = #{insuranceItems,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="activityInfo != null" >
+				activity_info = #{activityInfo,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="strategyInfo != null" >
+				strategy_info = #{strategyInfo,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="topicUrl != null" >
+				topic_url = #{topicUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="landingPageInfo != null" >
+				landing_page_info = #{landingPageInfo,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="generalPageInfo != null" >
+				general_page_info = #{generalPageInfo,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="mainPageInfo != null" >
+				main_page_info = #{mainPageInfo,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="failPageInfo != null" >
+				fail_page_info = #{failPageInfo,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="status != null" >
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="startTime != null" >
+				start_time = #{startTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endTime != null" >
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="customerNum != null" >
+				customer_num = #{customerNum,jdbcType=INTEGER},
+			</if>
+			<if test="calcNum != null" >
+				calc_num = #{calcNum,jdbcType=INTEGER},
+			</if>
+			<if test="orderNum != null" >
+				order_num = #{orderNum,jdbcType=INTEGER},
+			</if>
+			<if test="orderSuccNum != null" >
+				order_succ_num = #{orderSuccNum,jdbcType=INTEGER},
+			</if>
+			<if test="batchNum != null" >
+				batch_num = #{batchNum,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null" >
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null" >
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where sale_id = #{saleId,jdbcType=BIGINT}
+	</update>
+
+	<update id="updateSaleUrl" parameterType="com.weyao.srv.entity.SaleUrl" >
+		update t_sale_url
+		<set >
+			<if test="saleId != null" >
+				sale_id = #{saleId,jdbcType=BIGINT},
+			</if>
+			<if test="topicUrl != null" >
+				topic_url = #{topicUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="batchId != null" >
+				batch_id = #{batchId,jdbcType=INTEGER},
+			</if>
+			<if test="batchUrl != null" >
+				batch_url = #{batchUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="batchShortUrl != null" >
+				batch_short_url = #{batchShortUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null" >
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="customerNum != null" >
+				customer_num = #{customerNum,jdbcType=INTEGER},
+			</if>
+			<if test="calcNum != null" >
+				calc_num = #{calcNum,jdbcType=INTEGER},
+			</if>
+			<if test="orderNum != null" >
+				order_num = #{orderNum,jdbcType=INTEGER},
+			</if>
+			<if test="orderSuccNum != null" >
+				order_succ_num = #{orderSuccNum,jdbcType=INTEGER},
+			</if>
+			<if test="batchNum != null" >
+				batch_num = #{batchNum,jdbcType=INTEGER},
+			</if>
+			<if test="updateTime != null" >
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null" >
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where url_id = #{urlId,jdbcType=BIGINT}
+	</update>
+
+</mapper>

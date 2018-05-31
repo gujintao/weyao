@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.report.mapper.ILbDailyReportMapper">
+    <resultMap id="BaseStatusMap" type="com.weyao.srv.report.entity.LBTotalRecord">
+		<result column="record_date" property="recordDate" jdbcType="DATE" />
+		<result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+		<result column="bee_name" property="beeName" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="city_name" property="cityName" jdbcType="VARCHAR" />
+		<result column="area_name" property="areaName" jdbcType="VARCHAR" />
+		<result column="oper_name" property="operName" jdbcType="VARCHAR" />
+		<result column="from_source" property="fromSource" jdbcType="VARCHAR" />
+		<result column="bee_type" property="beeType" jdbcType="VARCHAR" />
+		<result column="calc_from0_status" property="calcFrom0Status" jdbcType="VARCHAR" />
+		<result column="calc_froma_status" property="calcFromaStatus" jdbcType="VARCHAR" />
+		<result column="bee_status" property="beeStatus" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	
+    <resultMap id="BeeGatherMap" type="com.weyao.srv.report.entity.LBGatherInfo">
+		<result column="register_date" property="registerDate" jdbcType="DATE" />
+		<result column="cid" property="cid" jdbcType="INTEGER" />
+		<result column="from_source" property="fromSource" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="city_name" property="cityName" jdbcType="VARCHAR" />
+		<result column="area_name" property="areaName" jdbcType="VARCHAR" />
+		<result column="oper_name" property="operName" jdbcType="VARCHAR" />
+		<result column="bee_type" property="beeType" jdbcType="VARCHAR" />
+		<result column="bee_status" property="beeStatus" jdbcType="VARCHAR" />
+		<result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+		<result column="bee_name" property="beeName" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="first_login_time" property="firstLoginTime" jdbcType="VARCHAR" />
+		<result column="calc_num_yyd" property="calcNumYyd" jdbcType="INTEGER" />
+		<result column="calc_num_jjr" property="calcNumJjr" jdbcType="INTEGER" />
+		<result column="chengdan_num_yyd" property="chengdanNumYyd" jdbcType="INTEGER" />
+		<result column="chengdan_num_jjr" property="chengdanNumJjr" jdbcType="INTEGER" />
+	</resultMap>
+    
+    <resultMap id="DailyOrderMap" type="com.weyao.srv.report.entity.DailyOrder">
+		<result column="insurance_id" property="insuranceId" jdbcType="VARCHAR" />
+		<result column="record_date" property="recordDate" jdbcType="DATE" />
+		<result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+		<result column="bee_name" property="beeName" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="city_name" property="cityName" jdbcType="VARCHAR" />
+		<result column="area_name" property="areaName" jdbcType="VARCHAR" />
+		<result column="oper_name" property="operName" jdbcType="VARCHAR" />
+		<result column="from_source" property="fromSource" jdbcType="VARCHAR" />
+		<result column="bee_type" property="beeType" jdbcType="VARCHAR" />
+		<result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+		<result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+		<result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+		<result column="passport_name" property="passportName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="DailyDianfuMap" type="com.weyao.srv.report.entity.DailyDianfuRecord">
+		<result column="record_date" property="recordDate" jdbcType="DATE" />
+		<result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+		<result column="bee_name" property="beeName" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="city_name" property="cityName" jdbcType="VARCHAR" />
+		<result column="area_name" property="areaName" jdbcType="VARCHAR" />
+		<result column="oper_name" property="operName" jdbcType="VARCHAR" />
+		<result column="from_source" property="fromSource" jdbcType="VARCHAR" />
+		<result column="bee_type" property="beeType" jdbcType="VARCHAR" />
+		<result column="calc_from_source" property="calcFromSource" jdbcType="VARCHAR" />
+		<result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+		<result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+		<result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+		
+		<result column="business_amount" property="businessAmount" jdbcType="FLOAT" />
+		<result column="force_discount_amount" property="forceDiscountAmount" jdbcType="FLOAT" />
+		<result column="vehicle_tax" property="vehicleTax" jdbcType="FLOAT" />
+		<result column="total_amount" property="totalAmount" jdbcType="FLOAT" />
+		<result column="real_amount" property="realAmount" jdbcType="FLOAT" />
+		
+		<!-- 新加的3个字段 -->
+		<result column="business_status_name" property="businessStatusName" jdbcType="VARCHAR" />
+		<result column="force_status_name" property="forceStatusName" jdbcType="VARCHAR" />
+		<result column="operator" property="operator" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="DailyCalcMap" type="com.weyao.srv.report.entity.DailyCalcRecord">
+		<result column="record_date" property="recordDate" jdbcType="DATE" />
+		<result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="city_name" property="cityName" jdbcType="VARCHAR" />
+		<result column="area_name" property="areaName" jdbcType="VARCHAR" />
+		<result column="oper_name" property="operName" jdbcType="VARCHAR" />
+		<result column="bee_type" property="beeType" jdbcType="VARCHAR" />
+		<result column="calc_from_source" property="calcFromSource" jdbcType="VARCHAR" />
+		<result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+		<result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+		<result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+		<result column="passport_name" property="passportName" jdbcType="VARCHAR" />
+		<result column="calc_amount" property="calcAmount" jdbcType="FLOAT" />
+	</resultMap>
+    
+    <sql id="bee_status_column_list">
+		status_flow.record_date,
+		bee.nick_name,
+		bee.bee_name,
+		bee.mobile,
+		bee.city_name,
+		bee.area_name,
+		bee.oper_name,
+		bee.from_source,
+		bee.type AS bee_type,
+		CASE IFNULL(status_flow.status_calc_from_0, 1)
+			WHEN 1 THEN '零报价' 
+			WHEN 2 THEN '活跃' 
+			WHEN 3 THEN '回流' 
+			WHEN 4 THEN '流失' 
+			WHEN 5 THEN '沉默' END AS calc_from0_status,
+		CASE IFNULL(status_flow.status_calc_from_a, 1)
+			WHEN 1 THEN '零报价' 
+			WHEN 2 THEN '活跃' 
+			WHEN 3 THEN '回流' 
+			WHEN 4 THEN '流失' 
+			WHEN 5 THEN '沉默' END AS calc_froma_status,
+		bee.bee_status
+	</sql>
+    
+    <select id="reportBeeStatus" resultType="com.weyao.srv.report.entity.LBTotalRecord" resultMap="BaseStatusMap">
+	SELECT 
+		<include refid="bee_status_column_list" />
+	FROM(
+	SELECT 
+		tbmr.cid,
+		tbmr.nick_name,
+		CASE tbmr.from_source  WHEN 0 THEN '经纪人系统' WHEN 1 THEN '又一单' WHEN 2 THEN '导入' END AS from_source,
+		(CASE 
+			WHEN tbmr.type = 0 THEN '待分配' 
+			WHEN tbmr.type = 1 THEN '综合门店' 
+			WHEN tbmr.type = 2 THEN '代理人' 
+			WHEN tbmr.type = 3 THEN '快修美容店' 
+			WHEN tbmr.type = 4 THEN '修理厂' 
+			WHEN tbmr.type = 5 THEN '内部' 
+			WHEN tbmr.type = 6 THEN '其他' 
+			WHEN tbmr.type = 7 THEN '纯美容洗车店' 
+			WHEN tbmr.type = 8 THEN '二手车' 
+			WHEN tbmr.type = 9 THEN '租赁公司' 
+			WHEN tbmr.type = 10 THEN '待分配'
+		ELSE NULL END) AS type,
+		customer.`name` AS bee_name,
+		customer.mobile AS mobile,
+		city.`name` AS city_name,
+		area.`name` AS area_name,
+		operator.`name` AS oper_name,
+		case tbmr.`status` WHEN 0 THEN '待补充资料' WHEN 1 THEN '待审核' WHEN 2 THEN '正常' WHEN 3 THEN '冻结' END AS bee_status
+	FROM 
+		t_bee_member_rele tbmr
+	LEFT JOIN
+		t_customer customer
+	ON
+		tbmr.cid=customer.cid
+	LEFT JOIN
+		t_city city
+	ON
+		city.city_id=tbmr.city_id 
+	LEFT JOIN
+		t_area area
+	ON
+		tbmr.county_id=area.area_id
+	LEFT JOIN
+		t_bee_operator_rele operator
+	ON
+		tbmr.member_op_id=operator.op_id) bee
+LEFT JOIN(
+	SELECT 
+		tbtd.cid,
+		tbtd.record_date,
+		SUM(IF(tbtd.calc_from = 0, CASE 
+			WHEN tbtd.is_activiti_within_14d IS NOT NULL THEN 2
+			WHEN tbtd.is_recover IS NOT NULL THEN 3
+			WHEN tbtd.is_lost IS NOT NULL THEN 4
+			WHEN tbtd.is_slience IS NOT NULL THEN 5 ELSE 1 END
+		, NULL)) AS status_calc_from_0,
+		SUM(IF(tbtd.calc_from = -1, CASE 
+			WHEN tbtd.is_activiti_within_14d IS NOT NULL THEN 2
+			WHEN tbtd.is_recover IS NOT NULL THEN 3
+			WHEN tbtd.is_lost IS NOT NULL THEN 4
+			WHEN tbtd.is_slience IS NOT NULL THEN 5 ELSE 1 END
+		, NULL)) AS status_calc_from_a
+	FROM 
+		t_bee_timeline_detail tbtd 
+	WHERE 
+		tbtd.record_date = DATE_SUB(CURDATE(),INTERVAL 1 DAY) 
+	GROUP BY
+		tbtd.cid) status_flow
+ON
+	bee.cid = status_flow.cid
+	</select>
+	
+	<sql id="yyd_bee_column_list">
+		DATE(tbmr.first_login_time) AS record_date,
+		tbmr.nick_name,
+		tc.`name` AS bee_name,
+		tc.mobile,
+		city.`name` AS city_name,
+		area.`name` AS area_name,
+		tbor.`name` AS oper_name,
+		CASE tbmr.from_source WHEN 0 THEN '又一单' WHEN 1 THEN '经纪人' ELSE NULL END AS from_source,
+		(CASE 
+			WHEN tbmr.type = 0 THEN '待分配' 
+			WHEN tbmr.type = 1 THEN '综合门店' 
+			WHEN tbmr.type = 2 THEN '代理人' 
+			WHEN tbmr.type = 3 THEN '快修美容店' 
+			WHEN tbmr.type = 4 THEN '修理厂' 
+			WHEN tbmr.type = 5 THEN '内部' 
+			WHEN tbmr.type = 6 THEN '其他' 
+			WHEN tbmr.type = 7 THEN '纯美容洗车店' 
+			WHEN tbmr.type = 8 THEN '二手车' 
+			WHEN tbmr.type = 9 THEN '租赁公司' 
+			WHEN tbmr.type = 10 THEN '待分配'
+		ELSE NULL END) AS bee_type
+	</sql>
+	
+	<select id="reportYydBees" resultType="com.weyao.srv.report.entity.LBTotalRecord" resultMap="BaseStatusMap">
+		SELECT 
+			<include refid="yyd_bee_column_list" />
+		FROM(
+			SELECT 
+				tbmr.cid,
+				DATE(tbmr.first_login_time) AS first_login_time,
+				tbmr.nick_name,
+				tbmr.city_id,
+				tbmr.county_id,
+				tbmr.member_op_id,
+				tbmr.from_source,
+				tbmr.type
+			FROM 
+				t_bee_member_rele tbmr
+			LEFT JOIN(
+				SELECT tci.cid, MAX(tci.create_time) calc_time FROM t_calc_insurance tci WHERE tci.sys_source_id = 1 GROUP BY tci.cid) tci
+			ON
+				tbmr.cid = tci.cid
+			WHERE(
+				DATE(tbmr.first_login_time) &lt; CURDATE() OR tci.calc_time IS NOT NULL)) tbmr
+		LEFT JOIN
+			t_customer tc
+		ON
+			tbmr.cid=tc.cid
+		LEFT JOIN
+			t_city city
+		ON
+			tbmr.city_id=city.city_id
+		LEFT JOIN
+			t_area area
+		ON
+			tbmr.county_id=area.area_id
+		LEFT JOIN
+			t_bee_operator_rele tbor
+		ON
+			tbmr.member_op_id=tbor.op_id
+		ORDER BY
+			tbmr.first_login_time DESC
+	</select>
+	
+	<sql id="total_bee_column_list">
+		DATE_FORMAT(a.create_time, '%Y-%m-%d') AS register_date,
+		a.cid,
+		(CASE WHEN a.from_source = 0 THEN '经纪人' WHEN a.from_source = 1 THEN '又一单' ELSE '导入' END ) from_source,
+		c.mobile,
+		d.`name` AS city_name,
+		e.`name` AS area_name,
+		f.`name` AS oper_name,
+		(CASE 
+			WHEN a.type = 0 THEN '待分配' 
+			WHEN a.type = 1 THEN '综合门店' 
+			WHEN a.type = 2 THEN '代理人' 
+			WHEN a.type = 3 THEN '快修美容店' 
+			WHEN a.type = 4 THEN '修理厂' 
+			WHEN a.type = 5 THEN '内部' 
+			WHEN a.type = 6 THEN '其他' 
+			WHEN a.type = 7 THEN '纯美容洗车店' 
+			WHEN a.type = 8 THEN '二手车' 
+			WHEN a.type = 9 THEN '租赁公司' 
+			WHEN a.type = 10 THEN '待分配'
+		ELSE NULL END) AS bee_type,
+		(CASE 
+			WHEN a.`status` = 0 THEN '待补充资料' 
+			WHEN a.`status` = 1 THEN '待审核' 
+			WHEN a.`status` = 2 THEN '正常' 
+			WHEN a.`status` = 3 THEN '冻结' 
+		ELSE NULL END) AS bee_status,
+		a.nick_name,
+		c.`name` AS bee_name,
+		a.address,
+		a.first_login_time,
+		b.yydbjsl AS calc_num_yyd,
+		b.jjrbjsl AS calc_num_jjr,
+		g.ybjcdsl AS chengdan_num_yyd,
+		g.jjrcdsl AS chengdan_num_jjr
+	</sql>
+	
+	<select id="reportTotalBees" resultType="com.weyao.srv.report.entity.LBGatherInfo" resultMap="BeeGatherMap">
+		SELECT 
+			<include refid="total_bee_column_list" />
+		FROM
+			t_bee_member_rele a
+		LEFT JOIN (
+			SELECT
+				t.cid,
+				count(
+					DISTINCT (
+						CASE
+						WHEN t.sys_source_id = 1 THEN
+							t.car_id
+						ELSE
+							NULL
+						END
+					)
+				) AS yydbjsl,
+				count(
+					DISTINCT (
+						CASE
+						WHEN t.sys_source_id = 2 THEN
+							t.car_id
+						ELSE
+							NULL
+						END
+					)
+				) AS jjrbjsl
+			FROM
+				t_calc_insurance t
+			GROUP BY
+				t.cid
+		) b ON a.cid = b.cid
+		LEFT JOIN t_customer c ON a.cid = c.cid
+		LEFT JOIN t_city d ON a.city_id = d.city_id
+		LEFT JOIN t_area e ON a.county_id = e.area_id
+		LEFT JOIN t_bee_operator_rele f ON a.member_op_id = f.op_id
+		LEFT JOIN (
+			SELECT
+				cid,
+				count(
+					DISTINCT (
+						CASE
+						WHEN order_source_type = 300 THEN
+							car_number
+						ELSE
+							NULL
+						END
+					)
+				) AS jjrcdsl,
+				count(
+					DISTINCT (
+						CASE
+						WHEN order_source_type = 400 THEN
+							car_number
+						ELSE
+							NULL
+						END
+					)
+				) AS ybjcdsl
+			FROM
+				t_st_insurance_based
+			GROUP BY
+				cid
+		) g ON a.cid = g.cid
+		ORDER BY a.create_time DESC
+	</select>
+	
+	<sql id="daily_order_column_list">
+		A.insurance_id,
+		A.today AS record_date,
+		A.source AS from_source,
+		B.nick_name,
+		B.mobile,
+		city.`name` AS city_name,
+		area.`name` AS area_name,
+		B.manager_name AS oper_name,
+		B.bee_type,
+		C.plate_number,
+		A.order_time,
+		A.supplier_name,
+		A.passport_name
+	</sql>
+	
+	<select id="listDailyOrders" resultType="com.weyao.srv.report.entity.DailyOrder" resultMap="DailyOrderMap">
+		SELECT 
+			<include refid="daily_order_column_list" />
+		FROM
+		(
+			SELECT DISTINCT
+				insurance.car_id,
+				insurance.cid,
+				insurance.insurance_id,
+				insurance.supplier_name,
+				insurance.create_time,
+				passport.`name` AS passport_name,
+				insurance.source,
+				insurance.today,
+				insurance.order_time
+			FROM
+				(
+					SELECT
+						M.cid,
+						M.pp_id,
+						M.insurance_id,
+						M.car_id,
+						M.supplier_name,
+						M.create_time,
+						M.today,
+						M.order_time,
+						M.source
+					FROM
+						(
+							SELECT
+								ti.cid,
+								ti.op_id AS pp_id,
+								ti.insurance_id,
+								ti.car_id,
+								ti.supplier_name,
+								ti.create_time,
+								tifd.cur_date AS today,
+								tifd.order_time,
+								CASE tci.sys_source_id
+							WHEN 1 THEN
+								'又一单'
+							WHEN 2 THEN
+								'经纪人'
+							WHEN 3 THEN
+								'API_CRM'
+							ELSE
+								NULL
+							END AS source
+							FROM
+								t_insurance ti,
+								t_order tod,
+								t_calc_insurance tci,
+								(SELECT tsib.insurance_id, tsib.now_check_time AS order_time, DATE(tsib.now_check_time) AS cur_date FROM t_st_insurance_based tsib WHERE tsib.insurance_ptype=200 AND tsib.now_check_time IS NOT NULL AND DATE(tsib.now_check_time)= DATE_SUB(CURDATE(), INTERVAL 1 DAY)) tifd
+							WHERE
+								ti.order_id = tod.order_id
+							AND tifd.insurance_id=ti.insurance_id
+							AND ti.ptype = 200
+							AND tod.syc_compute_id = tci.calc_id
+						) M
+					GROUP BY
+						M.cid,
+						M.car_id
+				) insurance
+			LEFT JOIN (
+				SELECT
+					passport_id,
+					`name`
+				FROM
+					t_passport
+			) passport ON insurance.pp_id = passport.passport_id
+			LEFT JOIN (
+				SELECT 
+					cid,
+					`name`
+				FROM
+					t_customer
+			) tc ON insurance.pp_id = tc.cid
+		) A,
+		(
+			SELECT
+				bee.cid,
+				bee.mobile,
+				bee.city_id,
+				bee.county_id,
+				bee.nick_name,
+				(CASE 
+					WHEN bee.bee_type = 0 THEN '待分配' 
+					WHEN bee.bee_type = 1 THEN '综合门店' 
+					WHEN bee.bee_type = 2 THEN '代理人' 
+					WHEN bee.bee_type = 3 THEN '快修美容店' 
+					WHEN bee.bee_type = 4 THEN '修理厂' 
+					WHEN bee.bee_type = 5 THEN '内部' 
+					WHEN bee.bee_type = 6 THEN '其他' 
+					WHEN bee.bee_type = 7 THEN '纯美容洗车店' 
+					WHEN bee.bee_type = 8 THEN '二手车' 
+					WHEN bee.bee_type = 9 THEN '租赁公司' 
+					WHEN bee.bee_type = 10 THEN '待分配'
+				ELSE NULL END) AS bee_type,
+				operator.`name` AS manager_name
+			FROM
+				(
+					SELECT
+						tc.cid,
+						tbmr.member_op_id,
+						tc.mobile,
+						tbmr.city_id,
+						tbmr.county_id,
+						tbmr.nick_name,
+						tbmr.`type` AS bee_type
+					FROM
+						t_bee_member_rele tbmr,
+						t_customer tc
+					WHERE
+						tbmr.cid = tc.cid
+				) bee
+			LEFT JOIN (
+				SELECT
+					op_id,
+					`name`
+				FROM
+					t_bee_operator_rele
+				WHERE
+					op_type = 2
+			) operator ON bee.member_op_id = operator.op_id
+		) B,
+		(
+			SELECT
+				tc.car_id,
+				tc.plate_number,
+				tb.batch_name
+			FROM
+				t_car tc,
+				t_batch tb
+			WHERE
+				tc.source_batch_id = tb.batch_id
+		) C,
+		t_city city,
+		t_area area
+		WHERE
+			A.cid = B.cid
+		AND A.car_id = C.car_id
+		AND B.city_id = city.city_id
+		AND B.county_id = area.area_id
+	</select>
+	
+	<sql id="daily_dianfu_column_list">
+		DATE(tod.record_time) AS record_date,
+		CASE toder.source_type WHEN 400 THEN '又一单' WHEN 300 THEN '经纪人' END AS calc_from_source,
+		tbmr.nick_name,
+		tbmr.mobile,
+		tbmr.city_name,
+		tbmr.area_name,
+		tbmr.op_name AS oper_name, 
+		(CASE 
+			WHEN tbmr.type = 0 THEN '待分配' 
+			WHEN tbmr.type = 1 THEN '综合门店' 
+			WHEN tbmr.type = 2 THEN '代理人' 
+			WHEN tbmr.type = 3 THEN '快修美容店' 
+			WHEN tbmr.type = 4 THEN '修理厂' 
+			WHEN tbmr.type = 5 THEN '内部' 
+			WHEN tbmr.type = 6 THEN '其他' 
+			WHEN tbmr.type = 7 THEN '纯美容洗车店' 
+			WHEN tbmr.type = 8 THEN '二手车' 
+			WHEN tbmr.type = 9 THEN '租赁公司' 
+			WHEN tbmr.type = 10 THEN '待分配'
+		ELSE NULL END) AS bee_type,
+		tod.car_number AS plate_number,
+		tod.record_time AS order_time,
+		tod.supplier_name,
+		tod.business_amount/100 AS business_amount,
+		(tod.force_amount - tod.tax_fee)/100 AS force_discount_amount,
+		tod.tax_fee/100 AS vehicle_tax,
+		(tod.business_amount + tod.force_amount)/100 AS total_amount,
+		toder.real_amount/100 AS real_amount,
+		bus_status_name.`name` AS business_status_name,
+		force_status_name.`name` AS force_status_name,
+		operator.username AS operator
+	</sql>
+	
+	<select id="listDailyDianfus" resultType="com.weyao.srv.report.entity.DailyDianfuRecord" resultMap="DailyDianfuMap" parameterType="com.weyao.srv.report.entity.DailyDianfuRecord">
+		SELECT 
+			<include refid="daily_dianfu_column_list" />
+		FROM
+			(SELECT DISTINCT
+				insurance.order_id,
+				insurance.car_number,
+				insurance.supplier_name,
+				MAX(flow.record_time) AS record_time,
+				MAX(insurance.insurance_id),
+				SUM(IF(insurance.ptype=200, insurance.insurance_reviewed_amount, 0)) AS business_amount,
+				SUM(IF(insurance.ptype=201, (insurance.insurance_reviewed_amount), 0)) AS force_amount,
+				SUM(IF(insurance.ptype=201, (taxfee.tax_fee), 0)) AS tax_fee,
+				SUM(IF(insurance.ptype=200, (insurance.`status`), 0)) AS business_status,
+				SUM(IF(insurance.ptype=201, (insurance.`status`), 0)) AS force_status
+			FROM
+			t_insurance insurance
+		LEFT JOIN
+			(SELECT f.insurance_id, MAX(f.create_time) AS record_time FROM t_insurance_flow_detail f WHERE f.insurance_status IN(6, 7, 9) GROUP BY f.insurance_id) flow
+		ON
+			insurance.insurance_id=flow.insurance_id
+		LEFT JOIN
+			t_tax_fee_detail taxfee
+		ON
+			taxfee.insurance_id=insurance.insurance_id
+		AND
+			taxfee.`status`=0
+		WHERE
+			DATE(flow.record_time) 
+			<if test="time == 2">
+				&lt;=CURDATE()
+			</if>
+			<if test="time == 1">
+				&lt;CURDATE()
+			</if>
+		AND
+			flow.record_time IS NOT NULL
+		GROUP BY
+			insurance.order_id) AS tod
+LEFT JOIN
+		(SELECT DISTINCT
+			calc_record.calc_from,
+			calc_i.order_id,
+			calc_record.cid
+		FROM
+			t_bee_calc_insurance calc_i,
+			t_bee_calc_record calc_record
+		WHERE
+			calc_i.calc_record_id=calc_record.calc_record_id) AS mem
+ON
+	tod.order_id=mem.order_id
+LEFT JOIN
+	t_order toder
+ON
+	mem.order_id=toder.order_id
+LEFT JOIN
+	t_operator operator
+ON
+	CASE toder.source_type WHEN 400 THEN 10449 ELSE toder.op_id END = operator.operator_id
+LEFT JOIN
+			(SELECT 
+					tbmr.cid,
+					city.`name` AS city_name,
+					area.`name` AS area_name,
+					tc.mobile,
+					tbmr.nick_name,
+					tbmr.`type`,
+					op.`name` AS op_name
+				FROM 
+					t_bee_member_rele tbmr 
+				LEFT JOIN t_bee_operator_rele op ON tbmr.member_op_id=op.op_id
+				LEFT JOIN t_customer tc ON tbmr.cid=tc.cid
+				LEFT JOIN t_city city ON tbmr.city_id=city.city_id
+				LEFT JOIN t_area area ON tbmr.county_id=area.area_id
+			) AS tbmr
+ON
+	mem.cid=tbmr.cid
+LEFT JOIN
+	(SELECT td.`code`, td.`name` FROM t_dictionary td WHERE td.type = 20013) AS bus_status_name
+ON
+	tod.business_status = bus_status_name.`code`
+LEFT JOIN
+	(SELECT td.`code`, td.`name` FROM t_dictionary td WHERE td.type = 20013) AS force_status_name
+ON
+		tod.force_status = force_status_name.`code`
+WHERE
+	tbmr.cid IS NOT NULL
+ORDER BY DATE(tod.record_time) DESC
+	</select>
+	
+	<sql id="daily_calc_column_list">
+		car.bj_time AS record_date,
+		(CASE car.bjly
+			WHEN 2 THEN '经纪人'
+			WHEN 1 THEN '又一单'
+			ELSE NULL END ) AS calc_from_source,
+		cin.nick_name,
+		cin.mobile,
+		cin.cs AS city_name,
+		cin.qy AS area_name,
+		cin.tzy AS oper_name,
+		cin.type AS bee_type,
+		car.plate_number,
+		car.bjsj AS order_time,
+		(car.real_price)/100 AS calc_amount,
+		car.supplier_name,
+		(CASE car.bjly
+			WHEN 2 THEN tp.`name`
+			WHEN 1 THEN tc.`name`
+			ELSE NULL END ) AS passport_name
+	</sql>
+	
+	<select id="listDailyCalcs" resultType="com.weyao.srv.report.entity.DailyCalcRecord" resultMap="DailyCalcMap">
+		SELECT 
+			<include refid="daily_calc_column_list" />
+		FROM
+			(
+				SELECT
+					a.cid,
+					a.calc_car_id,
+					tc.plate_number,
+					c.supplier_name,
+					b.real_price,
+					a.pp_id AS operator_id,
+					a.sys_source_id AS bjly,
+					DATE_FORMAT(a.create_time, '%Y-%m-%d') bj_time,
+					a.create_time bjsj
+				FROM
+					t_calc_insurance a
+				LEFT JOIN t_bee_calc_insurance b ON a.calc_id = b.calc_id
+				LEFT JOIN t_supplier c ON b.insurance_company = c.supplier_id
+				LEFT JOIN t_car tc ON tc.car_id=a.car_id
+				LEFT JOIN t_bee_member_rele tbmr ON a.cid=tbmr.cid
+				WHERE
+					DATE(a.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+				AND
+					a.sys_source_id IN(1, 2)
+			) car
+		LEFT JOIN (
+			SELECT
+				a.nick_name,
+				a.cid,
+				e.mobile, 
+				(CASE 
+					WHEN a.type = 0 THEN '待分配' 
+					WHEN a.type = 1 THEN '综合门店' 
+					WHEN a.type = 2 THEN '代理人' 
+					WHEN a.type = 3 THEN '快修美容店' 
+					WHEN a.type = 4 THEN '修理厂' 
+					WHEN a.type = 5 THEN '内部' 
+					WHEN a.type = 6 THEN '其他' 
+					WHEN a.type = 7 THEN '纯美容洗车店' 
+					WHEN a.type = 8 THEN '二手车' 
+					WHEN a.type = 9 THEN '租赁公司' 
+					WHEN a.type = 10 THEN '待分配'
+				ELSE NULL END) type,
+				b.`name` cs,
+				c.`name` qy,
+				d.`name` tzy
+			FROM
+				t_bee_member_rele a
+			LEFT JOIN t_city b ON a.city_id = b.city_id
+			LEFT JOIN t_area c ON a.county_id = c.area_id
+			LEFT JOIN t_bee_operator_rele d ON a.member_op_id = d.op_id
+			LEFT JOIN t_customer e ON a.cid = e.cid
+		) cin ON car.cid = cin.cid
+		LEFT JOIN t_passport tp
+		ON tp.passport_id=car.operator_id
+		LEFT JOIN t_customer tc
+		ON tc.cid=car.cid
+		WHERE
+			car.bj_time = date_sub(curdate(), INTERVAL 1 DAY)
+	</select>
+</mapper>

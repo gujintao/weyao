@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.report.mapper.IDailyConfirmedOrderMapper">
+    <resultMap id="DailyConfirmedOrder" type="com.weyao.srv.report.entity.DailyConfirmedOrder">
+		<result column="insurance_id" property="insuranceId" jdbcType="INTEGER" />
+		<result column="today" property="today" jdbcType="DATE" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="city_name" property="cityName" jdbcType="VARCHAR" />
+		<result column="area_name" property="areaName" jdbcType="VARCHAR" />
+		<result column="manager_name" property="managerName" jdbcType="VARCHAR" />
+		<result column="batch_name" property="batchName" jdbcType="VARCHAR" />
+		<result column="plate_number" property="plateNumber" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+		<result column="passport_name" property="passportName" jdbcType="VARCHAR" />
+	</resultMap>
+    
+    <sql id="DailyConfirmedOrder_Column_List">
+		A.insurance_id AS insurance_id,
+		A.today AS today,
+		A.source AS source,
+		B.nick_name AS nick_name,
+		B.mobile AS mobile,
+		city.`name` AS city_name,
+		area.`name` AS area_name,
+		B.manager_name AS manager_name,
+		C.batch_name AS batch_name,
+		C.plate_number AS plate_number,
+		A.create_time AS create_time,
+		A.supplier_name AS supplier_name,
+		A.passport_name AS passport_name
+	</sql>
+    
+    <select id="findDailyConfirmedOrder" resultType="com.weyao.srv.report.entity.DailyConfirmedOrder" resultMap="DailyConfirmedOrder">
+		SELECT 
+			<include refid="DailyConfirmedOrder_Column_List" />
+		FROM(
+			SELECT DISTINCT 
+				insurance.car_id, insurance.cid, insurance.insurance_id, insurance.supplier_name, insurance.create_time, passport.`name` AS passport_name, insurance.source, insurance.today
+			FROM(
+				SELECT 
+					M.cid, M.pp_id, M.insurance_id, M.car_id, M.supplier_name, M.create_time, M.today, M.source
+				FROM(
+					SELECT
+						ti.cid, ti.op_id AS pp_id, ti.insurance_id, ti.car_id, ti.supplier_name, ti.create_time, DATE(ti.create_time) AS today, CASE tci.sys_source_id WHEN 1 THEN '又一单' WHEN 2 THEN '经纪人' WHEN 3 THEN 'API_CRM' ELSE NULL END AS source
+					FROM
+						t_insurance ti,
+						t_order tod,
+						t_calc_insurance tci,
+						(SELECT DISTINCT tifd.insurance_id FROM t_insurance_flow_detail tifd WHERE tifd.insurance_status=3 AND DATE(tifd.create_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) tifd
+					WHERE
+						ti.order_id = tod.order_id AND tifd.insurance_id=ti.insurance_id AND ti.ptype = 200 AND tod.syc_compute_id = tci.calc_id) M
+				GROUP BY
+					M.cid, M.car_id ) insurance
+		LEFT JOIN (
+			SELECT
+				passport_id, `name`
+			FROM
+				t_passport
+		) passport ON insurance.pp_id = passport.passport_id
+		LEFT JOIN (
+			SELECT 
+				cid, `name`
+			FROM
+				t_customer
+		) tc ON insurance.pp_id = tc.cid
+	) A,
+	(
+		SELECT
+			bee.cid, bee.mobile, bee.city_id, bee.county_id, bee.nick_name, operator.`name` AS manager_name
+		FROM(
+			SELECT
+				tc.cid, tbmr.member_op_id, tc.mobile, tbmr.city_id, tbmr.county_id, tbmr.nick_name
+			FROM
+				t_bee_member_rele tbmr,
+				t_customer tc
+			WHERE
+				tbmr.cid = tc.cid
+			) bee
+		LEFT JOIN (
+			SELECT
+				op_id, `name`
+			FROM
+				t_bee_operator_rele
+			WHERE
+				op_type = 2
+		) operator ON bee.member_op_id = operator.op_id
+	) B,
+	(
+		SELECT
+			tc.car_id, tc.plate_number, tb.batch_name
+		FROM
+			t_car tc,
+			t_batch tb
+		WHERE
+			tc.source_batch_id = tb.batch_id
+	) C,
+	t_city city,
+	t_area area
+	WHERE
+		A.cid = B.cid AND A.car_id = C.car_id AND B.city_id = city.city_id AND B.county_id = area.area_id
+	</select>
+</mapper>

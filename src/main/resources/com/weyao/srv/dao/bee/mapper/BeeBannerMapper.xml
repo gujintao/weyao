@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.bee.mapper.BeeBannerMapper">
+     
+     <select id="selectOverdueBanner" resultType="java.lang.Long">
+     	SELECT banner_id  from t_bee_banner where `status` = 0  AND start_time <![CDATA[<]]> NOW()
+     </select>
+     
+     
+     <update id="updateOverdueBanner">
+     	update t_bee_banner SET `status` = 1  where banner_id= #{bannerId} AND `status` =0
+     </update>
+</mapper>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weyao.srv.dao.report.mapper.IDailyBeeActiveMapper">
+    <resultMap id="baseResult" type="com.weyao.srv.report.entity.DailyBeeActive">
+		<result column="record_date" property="recordDate" jdbcType="DATE" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="area" property="area" jdbcType="VARCHAR" />
+		<result column="total_bee_count" property="totalBeeCount" jdbcType="INTEGER" />
+		<result column="new_bee_count" property="newBeeCount" jdbcType="INTEGER" />
+		<result column="day_active" property="dayActive" jdbcType="INTEGER" />
+		<result column="week_active" property="weekActive" jdbcType="INTEGER" />
+		<result column="month_active" property="monthActive" jdbcType="INTEGER" />
+		<result column="active" property="active" jdbcType="FLOAT" />
+		<result column="lost_bee_count" property="lostBeeCount" jdbcType="VARCHAR" />
+		<result column="recover_bee_count" property="recoverBeeCount" jdbcType="VARCHAR" />
+	</resultMap>
+    
+    <sql id="overall_column_list">
+		MAX(timeline.record_date) AS record_date,
+		'Overall' AS type,
+		'Overall' AS area,
+		count(1) AS total_bee_count,
+		count(timeline.is_new) AS new_bee_count,
+		count(timeline.is_daya) AS day_active,
+		count(timeline.is_weeka) AS week_active,
+		count(timeline.is_montha) AS month_active,
+		count(timeline.is_daya)/count(1) AS active,
+		count(timeline.is_lost) AS lost_bee_count,
+		count(timeline.is_recover) AS recover_bee_count
+	</sql>
+	
+	<sql id="register_column_list">
+		MAX(timeline.record_date) AS record_date,
+		'注册类型' AS type,
+		CASE timeline.from_source WHEN 0 THEN '又一单' WHEN 1 THEN '经纪人' ELSE NULL END AS area,
+		count(1) AS total_bee_count,
+		count(timeline.is_new) AS new_bee_count,
+		count(timeline.is_daya) AS day_active,
+		count(timeline.is_weeka) AS week_active,
+		count(timeline.is_montha) AS month_active,
+		count(timeline.is_daya)/count(1) AS active,
+		count(timeline.is_lost) AS lost_bee_count,
+		count(timeline.is_recover) AS recover_bee_count
+	</sql>
+	
+	<sql id="fromsource_column_list">
+		MAX(timeline.record_date) AS record_date,
+		city.`name` AS type,
+		CASE timeline.bee_type
+			WHEN 1 THEN '综合门店' 
+			WHEN 2 THEN '代理人'
+			WHEN 3 THEN '快修美容店'
+			WHEN 4 THEN '修理厂'
+			WHEN 5 THEN '内部'
+			WHEN 6 THEN '待分配'
+		END AS area,
+		count(1) AS total_bee_count,
+		count(timeline.is_new) AS new_bee_count,
+		count(timeline.is_daya) AS day_active,
+		count(timeline.is_weeka) AS week_active,
+		count(timeline.is_montha) AS month_active,
+		count(timeline.is_daya)/count(1) AS active,
+		count(timeline.is_lost) AS lost_bee_count,
+		count(timeline.is_recover) AS recover_bee_count
+	</sql>
+    
+    <sql id="area_column_list">
+		MAX(timeline.record_date) AS record_date,
+		city.`name` AS type,
+		area.`name` AS area,
+		count(1) AS total_bee_count,
+		count(timeline.is_new) AS new_bee_count,
+		count(timeline.is_daya) AS day_active,
+		count(timeline.is_weeka) AS week_active,
+		count(timeline.is_montha) AS month_active,
+		count(timeline.is_daya)/count(1) AS active,
+		count(timeline.is_lost) AS lost_bee_count,
+		count(timeline.is_recover) AS recover_bee_count
+	</sql>
+    
+    <sql id="offersource_column_list">
+		line_record.record_date AS record_date,
+	'报价来源' AS type,
+	CASE line_record.calc_from WHEN 0 THEN '又一单' WHEN 1 THEN '经纪人' END AS area,
+	CASE line_record.calc_from 
+		WHEN 0 THEN (SELECT count(1) FROM t_bee_member_rele tbmr where tbmr.first_login_time IS NOT NULL) 
+		WHEN 1 THEN (SELECT (SELECT count(1) from t_bee_member_rele) - (SELECT count(1) FROM (SELECT r.cid AS calc_from_0 FROM t_bee_calc_record r GROUP BY r.cid HAVING count(IF(r.calc_from=1, 1, NULL))=0) AS a)) -- 小蜜蜂总数 减去 只用又一单报价的小蜜蜂数量
+	END AS total_bee_count,
+	CASE line_record.calc_from 
+		WHEN 0 THEN (SELECT count(1) FROM t_bee_member_rele tbmr where DATE(tbmr.first_login_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY)) 
+		WHEN 1 THEN (SELECT count(1) FROM (SELECT r.cid FROM t_bee_calc_record r GROUP BY r.cid HAVING MIN(DATE(r.create_time))=DATE_SUB(CURDATE(), INTERVAL 1 DAY)) AS a) -- 小蜜蜂总数 减去 只用又一单报价的小蜜蜂数量
+	END AS new_bee_count,
+	count(line_record.is_calc_daya) AS day_active,
+	count(line_record.is_calc_weeka) AS week_active,
+	count(line_record.is_calc_montha) AS month_active,
+	(count(line_record.is_calc_daya)/(CASE line_record.calc_from 
+		WHEN 0 THEN (SELECT count(1) FROM t_bee_member_rele tbmr where tbmr.first_login_time IS NOT NULL) 
+		WHEN 1 THEN (SELECT (SELECT count(1) from t_bee_member_rele) - (SELECT count(1) FROM (SELECT r.cid AS calc_from_0 FROM t_bee_calc_record r GROUP BY r.cid HAVING count(IF(r.calc_from=1, 1, NULL))=0) AS a)) -- 小蜜蜂总数 减去 只用又一单报价的小蜜蜂数量
+	END)) AS active,
+	'/' AS lost_bee_count,
+	'/' AS recover_bee_count
+	</sql>
+    
+    <select id="reportDailyBeeActive" resultType="com.weyao.srv.report.entity.DailyBeeActive" resultMap="baseResult">
+	SELECT 
+		<include refid="overall_column_list" />
+	FROM t_bee_timeline timeline UNION ALL
+	SELECT 
+		<include refid="register_column_list" />
+	FROM t_bee_timeline timeline GROUP BY timeline.from_source UNION ALL
+	SELECT 
+		<include refid="fromsource_column_list" />
+	FROM 
+		t_bee_timeline timeline, t_city city
+	WHERE
+		timeline.city_id=city.city_id
+	GROUP BY 
+		timeline.city_id, timeline.bee_type UNION ALL
+	SELECT 
+		<include refid="area_column_list" />
+	FROM 
+		t_bee_timeline timeline, t_city city, t_area area
+	WHERE
+		timeline.city_id=city.city_id
+	AND
+		timeline.county_id=area.area_id
+	GROUP BY 
+		timeline.city_id, timeline.county_id UNION ALL
+	SELECT
+		<include refid="offersource_column_list" />
+	FROM(
+		SELECT 
+			record.cid, 
+			record.calc_from, 
+			DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS record_date,
+			IF(count(IF(DATE(record.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY), 1, NULL))=0, NULL, 1) AS is_calc_daya,
+			<![CDATA[IF(count(CASE WHEN DATE(record.create_time)>=DATE_SUB(CURDATE(), INTERVAL WEEKDAY(DATE_SUB(CURDATE(), INTERVAL 1 DAY)) + 1 DAY) AND DATE(record.create_time)<=DATE_ADD(CURDATE(), INTERVAL 5 - WEEKDAY(DATE_SUB(CURDATE(), INTERVAL 1 DAY)) DAY) THEN 1 ELSE NULL END)>0, 1, 	NULL) AS is_calc_weeka,]]>
+			<![CDATA[IF(count(CASE WHEN DATE(record.create_time)>=DATE_ADD(CURDATE(), INTERVAL -DAY(curdate())+1 day) AND DATE(record.create_time)<=LAST_DAY(DATE_SUB(CURDATE(), INTERVAL 1 DAY)) THEN 1 ELSE NULL END)>0, 1, NULL) AS is_calc_montha]]>
+		FROM 
+			t_bee_calc_record record 
+		GROUP BY 
+			record.cid, record.calc_from) line_record
+	GROUP BY
+		line_record.calc_from	
+	</select>
+</mapper>
